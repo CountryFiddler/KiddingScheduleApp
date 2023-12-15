@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
+//import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AddBreedingPairModal = ({ visible, closeModal }) => {
 
@@ -8,13 +10,40 @@ export const AddBreedingPairModal = ({ visible, closeModal }) => {
     const [breedingDate, setBreedingDate] = useState('');
     const [kiddingDate, setKiddingDate] = useState('');
 
-    // storing data
-    const storeBreedingPair = async (breedingPair) => {
+    const breedingPair = {
+        doe: doe,
+        buck: buck,
+        breedingDate: breedingDate,
+        kiddingDate: kiddingDate,
+    }
+    async function storeBreedingPair (key, newData) {
         try {
+            // Step 1: Retrieve existing array from AsyncStorage
+            const existingData = await AsyncStorage.getItem(key);
+            console.log(!Array.isArray(existingData));
+            console.log(existingData);
+            if (!Array.isArray(existingData)) {
+                const breedingPairs = [newData]
+                //console.log(breedingPairs);
+                // Step 3: Save the updated array back to AsyncStorage
+                await AsyncStorage.setItem(key, JSON.stringify(breedingPairs));
+            } else {
+                const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
 
-            await AsynStorage.setItem("user", JSON.stringify(breedingPair));
+                // Step 2: Concatenate the new data to the existing array
+                const updatedData = [...parsedExistingBreedingPairs, ...newData];
+                console.log(updatedData);
+                await AsyncStorage.setItem(key, JSON.stringify(updatedData));
+            }
+
+            console.log('Array concatenated and stored successfully.');
+            closeModal();
+            setDoe('');
+            setBuck('');
+            setBreedingDate('');
+            setKiddingDate('');
         } catch (error) {
-            console.log(error);
+            console.error('Error concatenating array:', error);
         }
     };
 
@@ -59,6 +88,7 @@ export const AddBreedingPairModal = ({ visible, closeModal }) => {
                         onChangeText={text => setKiddingDate(text)}
                     />
                     <Button title="Close Modal" onPress={closeModal} />
+                    <Button title="Submit" onPress={() => storeBreedingPair('breedingPair', breedingPair)} />
                 </View>
             </View>
         </Modal>

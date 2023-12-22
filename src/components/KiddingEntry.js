@@ -3,10 +3,13 @@ import {StyleSheet, Text, View} from "react-native";
 
 
 const KiddingEntry = props => {
+
+    console.log(props.doe);
+
     return (
         <View style={styles.mainContainer}>
             <View >
-            <Text > {props.doe} </Text>
+            <Text> {props.doe} </Text>
             </View>
             <Text> {props.buck} </Text>
             <Text> {props.kiddingDate} </Text>
@@ -19,6 +22,7 @@ const styles = StyleSheet.create({
     headerContainer: { flexDirection: "row", justifyContent: 'center'},
     headers: {fontWeight: "bold"},
     does: {alignSelf: 'flex-start'},
+    color: {color: 'black'},
 })
 
 export default KiddingEntry;

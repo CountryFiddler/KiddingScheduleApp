@@ -18,7 +18,8 @@ const HomeScreen = () => {
                 const data = dataString ? JSON.parse(dataString) : [];
 
                 // Now 'data' is a JavaScript object or array
-                //console.log('Fetched data:', data);
+                console.log('Fetched data:', data);
+                //setBreedingPairs((data));
                 return data;
             } else {
                 // Data is not available
@@ -30,9 +31,11 @@ const HomeScreen = () => {
         }
     };
 
-    const [breedingPairs, setBreedingPairs] = useState(fetchBreedingPairs);
+    const [breedingPairs, setBreedingPairs] = useState([]);
 
     const [addBreedingPair, setAddBreedingPair] = useState(false);
+    const [deleteBreedingPair, setDeleteBreedingPair] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [modalVisible, setModalVisible] = useState(false);
     const pairs= [
@@ -54,14 +57,30 @@ const HomeScreen = () => {
         setAddBreedingPair(true);
     }
 
+    const deletePair = () => {
+        setDeleteBreedingPair(true);
+    }
+
     const renderKiddingPairs = ( {item} ) => (
-        <KiddingEntry doe={item.doe} buck={item.buck} kiddingDate={item.kiddingDate}/>
+        <KiddingEntry doe={item.doe} buck={item.buck} kiddingDate={item.kiddingDate} breedingDate={item.breedingDate}
+                      visible={modalVisible}
+                      deletedBreedingPair={deletePair} closeModal={closeModal} openModal={openModal}/>
     );
 
     useEffect(() => {
         fetchBreedingPairs()
     }, [addPair])
 
+    useEffect(() => {
+        fetchBreedingPairs().then((token) => {
+            setBreedingPairs(token);
+            setIsLoading(false);
+        });
+    }, [])
+
+    if (isLoading) {
+        return <View><Text>Loading...</Text></View>;
+    }
         return (
             <View style={styles.mainContainer}>
             <View style={styles.headerContainer}>
@@ -72,7 +91,7 @@ const HomeScreen = () => {
             </View>
                 <FlatList
                     data={breedingPairs}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.doe}
                     renderItem={renderKiddingPairs}
                 />
                 <Button title={'Add Breeding Pair'} onPress={openModal}/>

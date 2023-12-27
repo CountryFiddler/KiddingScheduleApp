@@ -1,5 +1,7 @@
 import {Component} from "react";
-import {StyleSheet, Text, View} from "react-native";
+import {Button, StyleSheet, Text, View} from "react-native";
+import {AddBreedingPairModal} from "./AddBreedingPairModal";
+import {EditBreedingPairModal} from "./EditBreedingPairModal";
 
 
 const KiddingEntry = props => {
@@ -13,6 +15,10 @@ const KiddingEntry = props => {
             </View>
             <Text> {props.buck} </Text>
             <Text> {props.kiddingDate} </Text>
+            <Button title={'Edit'} onPress={props.openModal}/>
+            <EditBreedingPairModal visible={props.visible} closeModal={props.closeModal}
+                doe={props.doe} buck={props.buck} breedingDate={props.breedingDate}
+                                  kiddingDate={props.kiddingDate} deletedBreedingPair={props.deletedBreedingPair}/>
         </View>
     );
 };

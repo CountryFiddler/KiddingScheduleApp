@@ -3,12 +3,12 @@ import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const AddBreedingPairModal = ({ visible, closeModal, addedBreedingPair }) => {
+export const EditBreedingPairModal = ({ visible, closeModal, deleteBreedingPair,doe, buck, breedingDate, kiddingDate }) => {
 
-    const [doe, setDoe] = useState('');
-    const [buck, setBuck] = useState('');
-    const [breedingDate, setBreedingDate] = useState('');
-    const [kiddingDate, setKiddingDate] = useState('');
+    //const [doe, setDoe] = useState(doe);
+   // const [buck, setBuck] = useState(this.props.buck);
+   // const [breedingDate, setBreedingDate] = useState(this.props.breedingDate);
+   // const [kiddingDate, setKiddingDate] = useState(this.props.kiddingDate);
 
     const breedingPair = {
         doe: doe,
@@ -16,27 +16,26 @@ export const AddBreedingPairModal = ({ visible, closeModal, addedBreedingPair })
         breedingDate: breedingDate,
         kiddingDate: kiddingDate,
     }
-    async function storeBreedingPair (key, newData) {
+    async function deleteBreedingPair (key, pairToDelete) {
         try {
+            const [dataArray, setDataArray] = useState([]);
             // Step 1: Retrieve existing array from AsyncStorage
             const existingData = await AsyncStorage.getItem(key);
-          //  console.log(!Array.isArray(existingData));
-           // console.log(existingData);
-            if (existingData === null) {
-                const breedingPairs = [newData]
-                //console.log(breedingPairs);
-                // Step 3: Save the updated array back to AsyncStorage
-                await AsyncStorage.setItem(key, JSON.stringify(breedingPairs));
-            } else {
+            //  console.log(!Array.isArray(existingData));
+            // console.log(existingData);
                 const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
                 // Step 2: Concatenate the new data to the existing array
-                const updatedData = [...parsedExistingBreedingPairs, newData];
-              //  console.log(updatedData);
-                await AsyncStorage.setItem(key, JSON.stringify(updatedData));
-            }
 
+            // Modify the array to remove the item
+            const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
+
+            // Save the modified array back to AsyncStorage
+            await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
+
+            // Update the state with the modified array
+            setDataArray(updatedArray);
             console.log('Array concatenated and stored successfully.');
-            addedBreedingPair();
+            deleteBreedingPair();
             closeModal();
             setDoe('');
             setBuck('');
@@ -89,7 +88,7 @@ export const AddBreedingPairModal = ({ visible, closeModal, addedBreedingPair })
                     />
                     <Button title="Close Modal" onPress={closeModal} />
                     <Button title="Submit" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
-                    <Button title="Delete" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
+                    <Button title="Delete Pair" onPress={() => deleteBreedingPair('breedingPairs', breedingPair)} />
                 </View>
             </View>
         </Modal>

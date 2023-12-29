@@ -3,12 +3,12 @@ import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const EditBreedingPairModal = ({ visible, closeModal, deleteBreedingPair,doe, buck, breedingDate, kiddingDate }) => {
+export const EditBreedingPairModal = ({ visible, closeModal, deletedBreedingPair,doe, buck, breedingDate, kiddingDate }) => {
 
-    //const [doe, setDoe] = useState(doe);
-   // const [buck, setBuck] = useState(this.props.buck);
-   // const [breedingDate, setBreedingDate] = useState(this.props.breedingDate);
-   // const [kiddingDate, setKiddingDate] = useState(this.props.kiddingDate);
+    const [currentDoe, setCurrentDoe] = useState(doe);
+    const [currentBuck, setCurrentBuck] = useState(buck);
+    const [currentBreedingDate, setCurrentBreedingDate] = useState(breedingDate);
+    const [currentKiddingDate, setCurrentKiddingDate] = useState(kiddingDate);
 
     const breedingPair = {
         doe: doe,
@@ -16,31 +16,49 @@ export const EditBreedingPairModal = ({ visible, closeModal, deleteBreedingPair,
         breedingDate: breedingDate,
         kiddingDate: kiddingDate,
     }
+
+    const closeEditModal = () => {
+        setCurrentDoe('');
+        setCurrentBuck('');
+        setCurrentBreedingDate('');
+        setCurrentKiddingDate('');
+        closeModal();
+    };
     async function deleteBreedingPair (key, pairToDelete) {
         try {
-            const [dataArray, setDataArray] = useState([]);
+            //const [dataArray, setDataArray] = useState([]);
             // Step 1: Retrieve existing array from AsyncStorage
             const existingData = await AsyncStorage.getItem(key);
             //  console.log(!Array.isArray(existingData));
             // console.log(existingData);
-                const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
+            const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
                 // Step 2: Concatenate the new data to the existing array
-
+            console.log('Delete this pair: ' + pairToDelete.doe)
+            //console.log(parsedExistingBreedingPairs);
             // Modify the array to remove the item
+            for (let i = 0; i < parsedExistingBreedingPairs.length; i++) {
+                console.log(parsedExistingBreedingPairs[i]);
+                if (parsedExistingBreedingPairs[i].doe === pairToDelete.doe) {
+                    console.log('Success');
+                    parsedExistingBreedingPairs.splice(i);
+                }
+            }
             const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
+            //console.log(updatedArray);
 
+           // await AsyncStorage.removeItem(key);
             // Save the modified array back to AsyncStorage
             await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
 
             // Update the state with the modified array
-            setDataArray(updatedArray);
+            //setDataArray(updatedArray);
             console.log('Array concatenated and stored successfully.');
-            deleteBreedingPair();
+            deletedBreedingPair();
             closeModal();
-            setDoe('');
-            setBuck('');
-            setBreedingDate('');
-            setKiddingDate('');
+            setCurrentDoe('');
+            setCurrentBuck('');
+            setCurrentBreedingDate('');
+            setCurrentKiddingDate('');
         } catch (error) {
             console.error('Error concatenating array:', error);
         }
@@ -61,32 +79,32 @@ export const EditBreedingPairModal = ({ visible, closeModal, deleteBreedingPair,
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={'Doe Name'}
-                        onChangeText={text => setDoe(text)}
-                        value={doe}
+                        placeholder={doe}
+                        onChangeText={text => setCurrentDoe(text)}
+                        value={currentDoe}
                     />
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={'Buck Name'}
-                        value={buck}
-                        onChangeText={text => setBuck(text)}
+                        placeholder={buck}
+                        value={currentBuck}
+                        onChangeText={text => setCurrentBuck(text)}
                     />
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={'Breeding Date'}
-                        value={breedingDate}
-                        onChangeText={text => setBreedingDate(text)}
+                        placeholder={breedingDate}
+                        value={currentBreedingDate}
+                        onChangeText={text => setCurrentBreedingDate(text)}
                     />
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={'Kidding Date'}
-                        value={kiddingDate}
-                        onChangeText={text => setKiddingDate(text)}
+                        placeholder={kiddingDate}
+                        value={currentKiddingDate}
+                        onChangeText={text => setCurrentKiddingDate(text)}
                     />
-                    <Button title="Close Modal" onPress={closeModal} />
+                    <Button title="Close Modal" onPress={closeEditModal} />
                     <Button title="Submit" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
                     <Button title="Delete Pair" onPress={() => deleteBreedingPair('breedingPairs', breedingPair)} />
                 </View>

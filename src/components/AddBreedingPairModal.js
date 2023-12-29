@@ -89,7 +89,6 @@ export const AddBreedingPairModal = ({ visible, closeModal, addedBreedingPair })
                     />
                     <Button title="Close Modal" onPress={closeModal} />
                     <Button title="Submit" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
-                    <Button title="Delete" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
                 </View>
             </View>
         </Modal>

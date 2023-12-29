@@ -6,7 +6,7 @@ import {EditBreedingPairModal} from "./EditBreedingPairModal";
 
 const KiddingEntry = props => {
 
-    console.log(props.doe);
+    //console.log(props.doe);
 
     return (
         <View style={styles.mainContainer}>

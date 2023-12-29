@@ -77,7 +77,10 @@ const HomeScreen = () => {
     );
 
     useEffect(() => {
-        fetchBreedingPairs()
+        fetchBreedingPairs().then((token) => {
+            setBreedingPairs(token);
+            setIsLoading(false);
+        });
     }, [addPair])
 
     useEffect(() => {

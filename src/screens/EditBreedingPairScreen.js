@@ -3,14 +3,17 @@ import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const EditBreedingPairModal = ({ visible, closeModal, deletedBreedingPair,doe, buck, breedingDate, kiddingDate }) => {
+const EditBreedingPairScreen = props => {
 
-    const [currentDoe, setCurrentDoe] = useState(doe);
-    const [currentBuck, setCurrentBuck] = useState(buck);
-    const [currentBreedingDate, setCurrentBreedingDate] = useState(breedingDate);
-    const [currentKiddingDate, setCurrentKiddingDate] = useState(kiddingDate);
+    const [doe, setDoe] = useState(props.route.params.doe);
+    const [buck, setBuck] = useState(props.route.params.buck);
+    const [breedingDate, setBreedingDate] = useState(props.route.params.breedingDate);
+    const [kiddingDate, setKiddingDate] = useState(props.route.params.kiddingDate);
 
-    const [reRenderModal, setReRenderModal] = useState(false);
+    console.log(doe);
+    console.log(buck);
+    console.log(breedingDate);
+    console.log(kiddingDate);
 
     const breedingPair = {
         doe: doe,
@@ -18,16 +21,6 @@ export const EditBreedingPairModal = ({ visible, closeModal, deletedBreedingPair
         breedingDate: breedingDate,
         kiddingDate: kiddingDate,
     }
-
-    const closeEditModal = () => {
-        //setCurrentDoe('');
-        //setCurrentBuck('');
-       /// setCurrentBreedingDate('');
-       // setCurrentKiddingDate('');
-       // setReRenderModal(true);
-        deletedBreedingPair();
-        closeModal();
-    };
 
     async function deleteBreedingPair (key, pairToDelete) {
         try {
@@ -37,7 +30,7 @@ export const EditBreedingPairModal = ({ visible, closeModal, deletedBreedingPair
             //  console.log(!Array.isArray(existingData));
             // console.log(existingData);
             const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
-                // Step 2: Concatenate the new data to the existing array
+            // Step 2: Concatenate the new data to the existing array
             console.log('Delete this pair: ' + pairToDelete.doe)
             //console.log(parsedExistingBreedingPairs);
             // Modify the array to remove the item
@@ -51,70 +44,59 @@ export const EditBreedingPairModal = ({ visible, closeModal, deletedBreedingPair
             const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
             //console.log(updatedArray);
 
-           // await AsyncStorage.removeItem(key);
+            // await AsyncStorage.removeItem(key);
             // Save the modified array back to AsyncStorage
             await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
 
             // Update the state with the modified array
             //setDataArray(updatedArray);
             console.log('Array concatenated and stored successfully.');
-            deletedBreedingPair();
-            closeModal();
-            setCurrentDoe('');
-            setCurrentBuck('');
-            setCurrentBreedingDate('');
-            setCurrentKiddingDate('');
+            setDoe('');
+            setBuck('');
+            setBreedingDate('');
+            setKiddingDate('');
         } catch (error) {
             console.error('Error concatenating array:', error);
         }
     };
 
     return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={visible}
-            onRequestClose={() => {
-                closeModal();
-            }}
-        >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <Text>This is your modal content!</Text>
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={doe}
-                        onChangeText={text => setCurrentDoe(text)}
-                        value={currentDoe}
+                        placeholder={props.doe}
+                        onChangeText={text => setDoe(text)}
+                        value={doe}
                     />
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={buck}
-                        value={currentBuck}
-                        onChangeText={text => setCurrentBuck(text)}
+                        placeholder={props.buck}
+                        value={buck}
+                        onChangeText={text => setBuck(text)}
                     />
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={breedingDate}
-                        value={currentBreedingDate}
-                        onChangeText={text => setCurrentBreedingDate(text)}
+                        placeholder={props.breedingDate}
+                        value={breedingDate}
+                        onChangeText={text => setBreedingDate(text)}
                     />
                     <TextInput
                         style={styles.textInputText}
                         placeholderTextColor='grey'
-                        placeholder={kiddingDate}
-                        value={currentKiddingDate}
-                        onChangeText={text => setCurrentKiddingDate(text)}
+                        placeholder={props.kiddingDate}
+                        value={kiddingDate}
+                        onChangeText={text => setKiddingDate(text)}
                     />
-                    <Button title="Close Modal" onPress={closeEditModal} />
+                    <Button title="Close Modal" onPress={() => props.navigation.navigate('HomeScreen')} />
                     <Button title="Submit" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
                     <Button title="Delete Pair" onPress={() => deleteBreedingPair('breedingPairs', breedingPair)} />
                 </View>
             </View>
-        </Modal>
     );
 };
 
@@ -138,3 +120,5 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
 });
+
+export default EditBreedingPairScreen;

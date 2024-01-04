@@ -10,6 +10,13 @@ const EditBreedingPairScreen = props => {
     const [breedingDate, setBreedingDate] = useState(props.route.params.breedingDate);
     const [kiddingDate, setKiddingDate] = useState(props.route.params.kiddingDate);
 
+    // Used to identify the original pair, so that editing changes are saved.
+    // Without this, editBreedingPair, will be unable to know which pair to edit.
+    const [originalDoe, setOriginalDoe] = useState(props.route.params.doe);
+    const [originalBuck, setOriginalBuck] = useState(props.route.params.buck);
+    const [originalBreedingDate, setOriginalBreedingDate] = useState(props.route.params.breedingDate);
+    const [originalKiddingDate, setOriginalKiddingDate] = useState(props.route.params.kiddingDate);
+
     console.log(doe);
     console.log(buck);
     console.log(breedingDate);
@@ -22,10 +29,18 @@ const EditBreedingPairScreen = props => {
         kiddingDate: kiddingDate,
     }
 
+    const originalBreedingPair = {
+        doe: originalDoe,
+        buck: originalBuck,
+        breedingDate: originalBreedingDate,
+        kiddingDate: originalKiddingDate,
+    }
+
     async function deleteBreedingPair (key, pairToDelete) {
         try {
             //const [dataArray, setDataArray] = useState([]);
             // Step 1: Retrieve existing array from AsyncStorage
+            const updatedArray = [];
             const existingData = await AsyncStorage.getItem(key);
             //  console.log(!Array.isArray(existingData));
             // console.log(existingData);
@@ -38,10 +53,55 @@ const EditBreedingPairScreen = props => {
                 console.log(parsedExistingBreedingPairs[i]);
                 if (parsedExistingBreedingPairs[i].doe === pairToDelete.doe) {
                     console.log('Success');
-                    parsedExistingBreedingPairs.splice(i);
+                    //parsedExistingBreedingPairs.splice(i);
+                } else {
+                    updatedArray.push(parsedExistingBreedingPairs[i]);
                 }
             }
-            const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
+            //const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
+           // const updatedArray = parsedExistingBreedingPairs;
+            //console.log(updatedArray);
+            // await AsyncStorage.removeItem(key);
+            // Save the modified array back to AsyncStorage
+            await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
+
+            // Update the state with the modified array
+            //setDataArray(updatedArray);
+            console.log('Array concatenated and stored successfully.');
+            setDoe('');
+            setBuck('');
+            setBreedingDate('');
+            setKiddingDate('');
+            console.log('asdflasdf');
+            props.navigation.navigate('HomeScreen')
+        } catch (error) {
+            console.error('Error concatenating array:', error);
+        }
+    };
+
+    async function editBreedingPair (key, pairToEdit, originalPair) {
+        try {
+            //const [dataArray, setDataArray] = useState([]);
+            // Step 1: Retrieve existing array from AsyncStorage
+            const existingData = await AsyncStorage.getItem(key);
+            //  console.log(!Array.isArray(existingData));
+            // console.log(existingData);
+            const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
+            // Step 2: Concatenate the new data to the existing array
+            console.log('Edit this pair: ' + pairToEdit.doe)
+            //console.log(parsedExistingBreedingPairs);
+            // Modify the array to remove the item
+            for (let i = 0; i < parsedExistingBreedingPairs.length; i++) {
+                console.log(parsedExistingBreedingPairs[i]);
+                if (parsedExistingBreedingPairs[i].doe === originalPair.doe) {
+                    console.log('Success');
+                    parsedExistingBreedingPairs[i].doe = pairToEdit.doe;
+                    parsedExistingBreedingPairs[i].buck = pairToEdit.buck;
+                    parsedExistingBreedingPairs[i].breedingDate = pairToEdit.breedingDate;
+                    parsedExistingBreedingPairs[i].kiddingDate = pairToEdit.kiddingDate;
+                }
+            }
+            const updatedArray = parsedExistingBreedingPairs;
             //console.log(updatedArray);
 
             // await AsyncStorage.removeItem(key);
@@ -55,6 +115,7 @@ const EditBreedingPairScreen = props => {
             setBuck('');
             setBreedingDate('');
             setKiddingDate('');
+            props.navigation.navigate('HomeScreen')
         } catch (error) {
             console.error('Error concatenating array:', error);
         }
@@ -93,7 +154,7 @@ const EditBreedingPairScreen = props => {
                         onChangeText={text => setKiddingDate(text)}
                     />
                     <Button title="Close Modal" onPress={() => props.navigation.navigate('HomeScreen')} />
-                    <Button title="Submit" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
+                    <Button title="Submit" onPress={() => editBreedingPair('breedingPairs', breedingPair, originalBreedingPair)} />
                     <Button title="Delete Pair" onPress={() => deleteBreedingPair('breedingPairs', breedingPair)} />
                 </View>
             </View>

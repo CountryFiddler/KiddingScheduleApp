@@ -1,4 +1,5 @@
 import {Component, useEffect, useState} from "react";
+import { useFonts } from 'expo-font';
 import {Button, StyleSheet, Text, View, FlatList} from "react-native";
 import KiddingEntry from "../components/KiddingEntry";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +8,7 @@ import {useIsFocused} from '@react-navigation/native'
 
 const HomeScreen = ({navigation}) => {
 
+
     const fetchBreedingPairs = async () => {
         try {
             // Fetch data from AsyncStorage
@@ -14,12 +16,10 @@ const HomeScreen = ({navigation}) => {
 
             if (dataString !== null) {
                 // Parse the data if it's not null
-               // const data = JSON.parse(dataString);
                 const data = dataString ? JSON.parse(dataString) : [];
 
                 // Now 'data' is a JavaScript object or array
                // console.log('Fetched data:', data);
-                //setBreedingPairs((data));
                 return data;
             } else {
                 // Data is not available

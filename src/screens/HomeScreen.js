@@ -4,6 +4,9 @@ import {Button, StyleSheet, Text, View, FlatList} from "react-native";
 import KiddingEntry from "../components/KiddingEntry";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native'
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {TouchableOpacity} from "react-native";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const HomeScreen = ({navigation}) => {
@@ -35,12 +38,14 @@ const HomeScreen = ({navigation}) => {
 
     const [isLoading, setIsLoading] = useState(true);
 
+    const [editMode, setEditMode] = useState(false);
+
     const isFocused = useIsFocused();
 
 
     const renderKiddingPairs = ( {item} ) => (
         <KiddingEntry doe={item.doe} buck={item.buck} kiddingDate={item.kiddingDate} breedingDate={item.breedingDate}
-                      navigation={navigation}/>
+                      navigation={navigation} editMode={editMode}/>
     );
 
 
@@ -54,23 +59,32 @@ const HomeScreen = ({navigation}) => {
         }
     }, [isFocused]);
 
+    useEffect(() => {
+        //console.log('Bob')
+    }, [editMode]);
+
     if (isLoading) {
         return <View><Text>Loading...</Text></View>;
     }
+
         return (
             <View style={styles.mainContainer}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.headers}> Doe </Text>
-                <Text style={styles.headers}> Buck </Text>
-                    <Text style={styles.headers}> Bred </Text>
-                <Text style={styles.headers}> Due </Text>
-            </View>
-                <FlatList
-                    data={breedingPairs}
-                    keyExtractor={(item) => item.doe}
-                    renderItem={renderKiddingPairs}
-                />
-                <Button title={'Add Breeding Pair'} onPress={() => navigation.navigate('AddBreedingPairScreen')}/>
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headers}>Kidding Schedule</Text>
+                    {editMode ? (
+                        <Button title={'Cancel'} onPress={() => setEditMode(false)}/>
+                    ) : (
+                        <View style={styles.addOrEditButtonsContainer}>
+                        <Button title={'Add Breeding Pair'} onPress={() => navigation.navigate('AddBreedingPairScreen')}/>
+                        <Button title={'Edit'} onPress={() => setEditMode(true)}/>
+                        </View>
+                    )}
+                </View>
+                    <FlatList
+                        data={breedingPairs}
+                        keyExtractor={(item) => item.doe}
+                        renderItem={renderKiddingPairs}
+                    />
 
 
             </View>
@@ -139,6 +153,7 @@ const HomeScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
         mainContainer: {flex: 1},
+        addOrEditButtonsContainer: {flexDirection: 'row'},
         headerContainer: { flexDirection: "row", justifyContent: 'space-around'},
         headers: {fontWeight: "bold"}
 })

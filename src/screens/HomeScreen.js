@@ -1,4 +1,4 @@
-import {Component, useEffect, useState} from "react";
+import {Component, useCallback, useEffect, useState} from "react";
 import { useFonts } from 'expo-font';
 import {Button, StyleSheet, Text, View, FlatList} from "react-native";
 import KiddingEntry from "../components/KiddingEntry";
@@ -7,6 +7,8 @@ import {useIsFocused} from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity} from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import * as Font from 'expo-font'
+import * as SplashScreen from "expo-splash-screen";
 
 
 const HomeScreen = ({navigation}) => {
@@ -34,11 +36,19 @@ const HomeScreen = ({navigation}) => {
         }
     };
 
+  /* const fetchFonts = async() => {
+        await Font.loadAsync({
+            'WestonFree': require('../assets/fonts/WestonFree-Regular.ttf'),
+        })
+    }*/
+
     const [breedingPairs, setBreedingPairs] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
 
     const [editMode, setEditMode] = useState(false);
+
+   // const [fontsLoaded, setFontsLoaded] = useState(false);
 
     const isFocused = useIsFocused();
 
@@ -54,14 +64,16 @@ const HomeScreen = ({navigation}) => {
             fetchBreedingPairs().then((token) => {
                 setBreedingPairs(token);
                 setIsLoading(false);
-                console.log('Rerender')
+                console.log('Rerender');
             });
         }
     }, [isFocused]);
 
+
     useEffect(() => {
         //console.log('Bob')
     }, [editMode]);
+
 
     if (isLoading) {
         return <View><Text>Loading...</Text></View>;
@@ -155,7 +167,7 @@ const styles = StyleSheet.create({
         mainContainer: {flex: 1},
         addOrEditButtonsContainer: {flexDirection: 'row'},
         headerContainer: { flexDirection: "row", justifyContent: 'space-around'},
-        headers: {fontWeight: "bold"}
+        headers: {fontWeight: "bold", fontFamily: 'WestonFree'}
 })
 
 export default HomeScreen;

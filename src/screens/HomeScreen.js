@@ -1,6 +1,6 @@
 import {Component, useCallback, useEffect, useState} from "react";
 import { useFonts } from 'expo-font';
-import {Button, StyleSheet, Text, View, FlatList} from "react-native";
+import {Button, StyleSheet, Text, View, FlatList, TouchableOpacityComponent} from "react-native";
 import KiddingEntry from "../components/KiddingEntry";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native'
@@ -9,6 +9,8 @@ import {TouchableOpacity} from "react-native";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Font from 'expo-font'
 import * as SplashScreen from "expo-splash-screen";
+import {Feather, FontAwesome} from "@expo/vector-icons";
+import {Touchable} from "react-native-web";
 
 
 const HomeScreen = ({navigation}) => {
@@ -84,20 +86,28 @@ const HomeScreen = ({navigation}) => {
                 <View style={styles.headerContainer}>
                     <Text style={styles.headers}>Kidding Schedule</Text>
                     {editMode ? (
-                        <Button title={'Cancel'} onPress={() => setEditMode(false)}/>
+                        <TouchableOpacity onPress={() => setEditMode(false)}>
+                            <Text style={styles.headers}>Done</Text>
+                        </TouchableOpacity>
                     ) : (
                         <View style={styles.addOrEditButtonsContainer}>
-                        <Button title={'Add Breeding Pair'} onPress={() => navigation.navigate('AddBreedingPairScreen')}/>
-                        <Button title={'Edit'} onPress={() => setEditMode(true)}/>
+                            <TouchableOpacity style={styles.iconButtons} onPress={() => navigation.navigate('AddBreedingPairScreen')}>
+                                <Feather name="plus" size={33} color={'#000034'} />
+                            </TouchableOpacity>
+                        <TouchableOpacity style={styles.iconButtons} onPress={() => setEditMode(true)}>
+                            <Feather name="edit-2" size={30} color={'#000034'} />
+                        </TouchableOpacity>
                         </View>
                     )}
                 </View>
+                <View style={styles.listView}>
                     <FlatList
                         data={breedingPairs}
                         keyExtractor={(item) => item.doe}
                         renderItem={renderKiddingPairs}
                     />
 
+                </View>
 
             </View>
         );
@@ -164,10 +174,13 @@ const HomeScreen = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
-        mainContainer: {flex: 1},
-        addOrEditButtonsContainer: {flexDirection: 'row'},
-        headerContainer: { flexDirection: "row", justifyContent: 'space-around'},
-        headers: {fontWeight: "bold", fontFamily: 'WestonFree'}
+        mainContainer: {flex: 1, alignItems: 'center'},
+        addOrEditButtonsContainer: {flexDirection: 'row', width: '25%', justifyContent: 'space-between',},
+        iconButtons: {margin: '2%'},
+        headerContainer: { flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', width: '95%'
+        , marginTop: '2%', height: '5%'},
+        headers: {fontWeight: "bold", fontSize: 24, fontFamily: 'WestonFree', color: '#000034'},
+        listView: {marginTop: '2%', width: '95%'},
 })
 
 export default HomeScreen;

@@ -10,6 +10,8 @@ import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen'
 import {useCallback, useEffect} from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { FontAwesome } from '@expo/vector-icons';
 import {TextInput} from "react-native-web";
 
 

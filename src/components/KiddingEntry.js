@@ -27,7 +27,7 @@ const KiddingEntry = props => {
             <View style={styles.mainContainer}>
                 <TouchableOpacity style={styles.contentContainer} onPress={() => props.navigation.navigate('EditBreedingPairScreen', {
                     doe: props.doe, buck: props.buck, breedingDate: props.breedingDate,
-                    kiddingDate: props.kiddingDate
+                    kiddingDate: props.kiddingDate, id: props.id
                 })}>
                     <View style={styles.singleTextItemContainer}>
                         <Text style={styles.kiddingEntryLabel}>Doe: </Text>

@@ -16,17 +16,19 @@ const EditBreedingPairScreen = props => {
     const [originalBuck, setOriginalBuck] = useState(props.route.params.buck);
     const [originalBreedingDate, setOriginalBreedingDate] = useState(props.route.params.breedingDate);
     const [originalKiddingDate, setOriginalKiddingDate] = useState(props.route.params.kiddingDate);
+    const [id, setID] = useState(props.route.params.id);
 
-    console.log(doe);
-    console.log(buck);
-    console.log(breedingDate);
-    console.log(kiddingDate);
+    //console.log(doe);
+    //console.log(buck);
+    //console.log(breedingDate);
+   // console.log(kiddingDate);
 
     const breedingPair = {
         doe: doe,
         buck: buck,
         breedingDate: breedingDate,
         kiddingDate: kiddingDate,
+        id: id,
     }
 
     const originalBreedingPair = {
@@ -34,6 +36,7 @@ const EditBreedingPairScreen = props => {
         buck: originalBuck,
         breedingDate: originalBreedingDate,
         kiddingDate: originalKiddingDate,
+        id: id,
     }
 
     async function deleteBreedingPair (key, pairToDelete) {
@@ -46,12 +49,12 @@ const EditBreedingPairScreen = props => {
             // console.log(existingData);
             const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
             // Step 2: Concatenate the new data to the existing array
-            console.log('Delete this pair: ' + pairToDelete.doe)
+            console.log('Delete this pair: ' + pairToDelete.id)
             //console.log(parsedExistingBreedingPairs);
             // Modify the array to remove the item
             for (let i = 0; i < parsedExistingBreedingPairs.length; i++) {
                 console.log(parsedExistingBreedingPairs[i]);
-                if (parsedExistingBreedingPairs[i].doe === pairToDelete.doe) {
+                if (parsedExistingBreedingPairs[i].id === pairToDelete.id) {
                     console.log('Success');
                     //parsedExistingBreedingPairs.splice(i);
                 } else {
@@ -61,7 +64,7 @@ const EditBreedingPairScreen = props => {
             //const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
            // const updatedArray = parsedExistingBreedingPairs;
             //console.log(updatedArray);
-            // await AsyncStorage.removeItem(key);
+             //await AsyncStorage.removeItem(key);
             // Save the modified array back to AsyncStorage
             await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
 
@@ -72,7 +75,7 @@ const EditBreedingPairScreen = props => {
             setBuck('');
             setBreedingDate('');
             setKiddingDate('');
-            console.log('asdflasdf');
+            //console.log('asdflasdf');
             props.navigation.navigate('HomeScreen')
         } catch (error) {
             console.error('Error concatenating array:', error);
@@ -88,13 +91,13 @@ const EditBreedingPairScreen = props => {
             // console.log(existingData);
             const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
             // Step 2: Concatenate the new data to the existing array
-            console.log('Edit this pair: ' + pairToEdit.doe)
+            console.log('Edit this pair: ' + pairToEdit.id)
             //console.log(parsedExistingBreedingPairs);
             // Modify the array to remove the item
             for (let i = 0; i < parsedExistingBreedingPairs.length; i++) {
                 console.log(parsedExistingBreedingPairs[i]);
-                if (parsedExistingBreedingPairs[i].doe === originalPair.doe) {
-                    console.log('Success');
+                if (parsedExistingBreedingPairs[i].id === originalPair.id) {
+                    parsedExistingBreedingPairs[i].id = pairToEdit.doe + pairToEdit.buck + pairToEdit.breedingDate + pairToEdit.kiddingDate
                     parsedExistingBreedingPairs[i].doe = pairToEdit.doe;
                     parsedExistingBreedingPairs[i].buck = pairToEdit.buck;
                     parsedExistingBreedingPairs[i].breedingDate = pairToEdit.breedingDate;

@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {TouchableOpacity} from "react-native";
 
- const AddBreedingPairScreen = props => {
+const AddBreedingPairScreen = props => {
 
     const [doe, setDoe] = useState('');
     const [buck, setBuck] = useState('');
@@ -15,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
         buck: buck,
         breedingDate: breedingDate,
         kiddingDate: kiddingDate,
+        id: '',
     }
 
      const addBreedingPair = () => {
@@ -24,6 +26,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
     async function storeBreedingPair (key, newData) {
         try {
             // Step 1: Retrieve existing array from AsyncStorage
+            newData.id = newData.doe + newData.buck + newData.breedingDate + newData.kiddingDate;
+           // console.log(newData.id);
             const existingData = await AsyncStorage.getItem(key);
             //  console.log(!Array.isArray(existingData));
             // console.log(existingData);
@@ -53,39 +57,57 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
     };
 
     return (
-            <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                    <Text>This is your modal content!</Text>
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={'Doe Name'}
-                        onChangeText={text => setDoe(text)}
-                        value={doe}
-                    />
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={'Buck Name'}
-                        value={buck}
-                        onChangeText={text => setBuck(text)}
-                    />
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={'Breeding Date'}
-                        value={breedingDate}
-                        onChangeText={text => setBreedingDate(text)}
-                    />
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={'Kidding Date'}
-                        value={kiddingDate}
-                        onChangeText={text => setKiddingDate(text)}
-                    />
-                    <Button title="Close Modal" onPress={() => props.navigation.navigate('HomeScreen')} />
-                    <Button title="Submit" onPress={() => {storeBreedingPair('breedingPairs', breedingPair)}} />
+            <View style={styles.mainContainer}>
+                <View style={styles.contentContainer}>
+                    <View style={styles.singleTextItemContainer}>
+                        <Text style={styles.kiddingEntryLabel}>Doe: </Text>
+                        <TextInput
+                            style={styles.kiddingEntryText}
+                            placeholderTextColor='grey'
+                            placeholder={'Doe Name'}
+                            onChangeText={text => setDoe(text)}
+                            value={doe}
+                        />
+                    </View>
+                    <View style={styles.singleTextItemContainer}>
+                        <Text style={styles.kiddingEntryLabel}>Buck: </Text>
+                        <TextInput
+                            style={styles.kiddingEntryText}
+                            placeholderTextColor='grey'
+                            placeholder={'Buck Name'}
+                            value={buck}
+                            onChangeText={text => setBuck(text)}
+                        />
+                    </View>
+                    <View style={styles.singleTextItemContainer}>
+                        <Text style={styles.kiddingEntryLabel}>Bred: </Text>
+                        <TextInput
+                            style={styles.kiddingEntryText}
+                            placeholderTextColor='grey'
+                            placeholder={'Breeding Date'}
+                            value={breedingDate}
+                            onChangeText={text => setBreedingDate(text)}
+                        />
+                    </View>
+                    <View style={styles.singleTextItemContainer}>
+                        <Text style={styles.kiddingEntryLabel}>Due: </Text>
+                        <TextInput
+                            style={styles.kiddingEntryText}
+                            placeholderTextColor='grey'
+                            placeholder={'Kidding Date'}
+                            value={kiddingDate}
+                            onChangeText={text => setKiddingDate(text)}
+                        />
+                    </View>
+
+                </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('HomeScreen')}>
+                        <Text style={styles.kiddingEntryLabel}>Close</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => {storeBreedingPair('breedingPairs', breedingPair)}}>
+                        <Text style={styles.kiddingEntryLabel}>Submit</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
     );
@@ -95,23 +117,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 const styles = StyleSheet.create({
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 100,
-        borderRadius: 10,
-        elevation: 5,
-    },
-    textInputText: {
-        fontWeight: 'bold',
-        color: 'black',
-        fontSize: 17,
-    },
+    mainContainer: {flexDirection: "column", justifyContent: 'space-around', alignItems: 'center'},
+    contentContainer: {flexDirection: "column", width: '95%', marginLeft: '2%', margin: '2%'},
+    singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
+    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#000034'},
+    kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#000034'},
+    buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'}
 });
 
 export default AddBreedingPairScreen;

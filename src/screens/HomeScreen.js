@@ -50,6 +50,7 @@ const HomeScreen = ({navigation}) => {
 
     const [editMode, setEditMode] = useState(false);
 
+
    // const [fontsLoaded, setFontsLoaded] = useState(false);
 
     const isFocused = useIsFocused();
@@ -57,7 +58,7 @@ const HomeScreen = ({navigation}) => {
 
     const renderKiddingPairs = ( {item} ) => (
         <KiddingEntry doe={item.doe} buck={item.buck} kiddingDate={item.kiddingDate} breedingDate={item.breedingDate}
-                      navigation={navigation} editMode={editMode}/>
+                      id={item.id} navigation={navigation} editMode={editMode}/>
     );
 
 
@@ -66,8 +67,11 @@ const HomeScreen = ({navigation}) => {
             fetchBreedingPairs().then((token) => {
                 setBreedingPairs(token);
                 setIsLoading(false);
-                console.log('Rerender');
+                console.log(breedingPairs.length)
+                console.log(breedingPairs)
+               // console.log('Rerender');
             });
+            //console.log(breedingPairs)
         }
     }, [isFocused]);
 
@@ -100,15 +104,39 @@ const HomeScreen = ({navigation}) => {
                         </View>
                     )}
                 </View>
-                <View style={styles.listView}>
-                    <FlatList
-                        data={breedingPairs}
-                        keyExtractor={(item) => item.doe}
-                        renderItem={renderKiddingPairs}
-                    />
+                {(breedingPairs.length === 0 && !editMode) ? (
+                    <View style={styles.welcomeMessageContainer}>
+                        <Text style={styles.welcomeMessageText}>Click the + button in to begin adding breeding pairs to your kidding schedule. Here's to a
+                        great kidding season!</Text>
 
-                </View>
+                    </View>
 
+                ) : editMode ? (
+                    <View style={styles.editModeContainer}>
+                        <View >
+                            <Text style={styles.welcomeMessageText}>Click on a breeding pair to edit</Text>
+
+                        </View>
+                    <View style={styles.listView}>
+                        <FlatList
+                            data={breedingPairs}
+                            keyExtractor={(item) => item.doe}
+                            renderItem={renderKiddingPairs}
+                        />
+
+                    </View>
+                    </View>
+
+                ) : (
+                    <View style={styles.listView}>
+                        <FlatList
+                            data={breedingPairs}
+                            keyExtractor={(item) => item.doe}
+                            renderItem={renderKiddingPairs}
+                        />
+
+                    </View>
+                )}
             </View>
         );
 };
@@ -180,7 +208,10 @@ const styles = StyleSheet.create({
         headerContainer: { flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', width: '95%'
         , marginTop: '2%', height: '5%'},
         headers: {fontWeight: "bold", fontSize: 24, fontFamily: 'WestonFree', color: '#000034'},
-        listView: {marginTop: '2%', width: '95%'},
+        listView: {marginTop: '2%', width: '100%'},
+        welcomeMessageContainer: {flex: 1, width: '95%',  alignItems: 'center', marginTop: '15%'},
+        welcomeMessageText: {fontWeight: "bold", fontSize: 18, fontFamily: 'WestonFree', color: '#000034', lineHeight: 35, textAlign: 'center'},
+        editModeContainer: {width: '100%',  alignItems: 'center', marginTop: '5%'},
 })
 
 export default HomeScreen;

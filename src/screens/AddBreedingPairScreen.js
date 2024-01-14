@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
+import {View, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TouchableOpacity} from "react-native";
+//import { RadioButton } from 'react-native-paper';
+import {RadioGroup} from 'react-native-ui-lib';
+import {RadioButton} from "react-native-ui-lib";
+import KiddingEntry from "../components/KiddingEntry"; //eslint-disable-line
 
 const AddBreedingPairScreen = props => {
 
@@ -10,6 +14,7 @@ const AddBreedingPairScreen = props => {
     const [buck, setBuck] = useState('');
     const [breedingDate, setBreedingDate] = useState('');
     const [kiddingDate, setKiddingDate] = useState('');
+    const [gestationCalculatorMode, setGestationCalculatorMode] = useState('standard');
 
     const breedingPair = {
         doe: doe,
@@ -19,14 +24,11 @@ const AddBreedingPairScreen = props => {
         id: '',
     }
 
-     const addBreedingPair = () => {
-        props.reRender();
-     };
-
     async function storeBreedingPair (key, newData) {
         try {
             // Step 1: Retrieve existing array from AsyncStorage
             newData.id = newData.doe + newData.buck + newData.breedingDate + newData.kiddingDate;
+            let pairExists = false;
            // console.log(newData.id);
             const existingData = await AsyncStorage.getItem(key);
             //  console.log(!Array.isArray(existingData));
@@ -38,23 +40,53 @@ const AddBreedingPairScreen = props => {
                 await AsyncStorage.setItem(key, JSON.stringify(breedingPairs));
             } else {
                 const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
-                // Step 2: Concatenate the new data to the existing array
-                const updatedData = [...parsedExistingBreedingPairs, newData];
-                //  console.log(updatedData);
-                await AsyncStorage.setItem(key, JSON.stringify(updatedData));
+
+                for (let i = 0 ; i < parsedExistingBreedingPairs.length; i++) {
+                    if (parsedExistingBreedingPairs[i].id === newData.id) {
+                        pairExists = true;
+                        break;
+                    }
+                }
+
+                if (!pairExists) {
+                    // Step 2: Concatenate the new data to the existing array
+                    const updatedData = [...parsedExistingBreedingPairs, newData];
+                    //  console.log(updatedData);
+                    await AsyncStorage.setItem(key, JSON.stringify(updatedData));
+
+                    console.log('Array concatenated and stored successfully.');
+                    setDoe('');
+                    setBuck('');
+                    setBreedingDate('');
+                    setKiddingDate('');
+                    props.navigation.navigate('HomeScreen')
+
+                } else {
+                    Alert.alert(
+                        'Breeding Pair Already Exists',
+                        'This pair already exists, please enter a different breeding pair',
+                        [
+                            { text: 'OK', onPress: () => console.log('OK Pressed') }
+                        ],
+                        { cancelable: false }
+                    );
+                }
             }
             //await AsyncStorage.removeItem(key);
-            console.log('Array concatenated and stored successfully.');
-            setDoe('');
-            setBuck('');
-            setBreedingDate('');
-            setKiddingDate('');
-            props.navigation.navigate('HomeScreen')
             //addBreedingPair();
         } catch (error) {
             console.error('Error concatenating array:', error);
         }
     };
+
+    const renderGestationCalculatorOption = ( {color, gestationOption, label} ) => {
+        return (
+            <View >
+                <RadioButton value={gestationOption} label={label}/>
+            </View>
+        );
+    }
+
 
     return (
             <View style={styles.mainContainer}>
@@ -88,6 +120,13 @@ const AddBreedingPairScreen = props => {
                             value={breedingDate}
                             onChangeText={text => setBreedingDate(text)}
                         />
+                    </View>
+                    <View>
+                        <RadioGroup initialValue={gestationCalculatorMode} onValueChange={value => setGestationCalculatorMode(value)}>
+                            {renderGestationCalculatorOption('#000034', 'standard', 'Standard')}
+                            {renderGestationCalculatorOption('#000034', 'mini', 'Mini')}
+                            {renderGestationCalculatorOption('#000034', 'custom', 'Custom')}
+                        </RadioGroup>
                     </View>
                     <View style={styles.singleTextItemContainer}>
                         <Text style={styles.kiddingEntryLabel}>Due: </Text>

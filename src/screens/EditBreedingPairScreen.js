@@ -107,12 +107,12 @@ const EditBreedingPairScreen = props => {
             const updatedArray = parsedExistingBreedingPairs;
             //console.log(updatedArray);
 
-            // await AsyncStorage.removeItem(key);
+             await AsyncStorage.removeItem(key);
             // Save the modified array back to AsyncStorage
-            await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
+           // await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
 
             // Update the state with the modified array
-            //setDataArray(updatedArray);
+            setDataArray(updatedArray);
             console.log('Array concatenated and stored successfully.');
             setDoe('');
             setBuck('');

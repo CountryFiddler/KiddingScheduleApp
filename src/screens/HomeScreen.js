@@ -120,7 +120,7 @@ const HomeScreen = ({navigation}) => {
                     <View style={styles.listView}>
                         <FlatList
                             data={breedingPairs}
-                            keyExtractor={(item) => item.doe}
+                            keyExtractor={(item) => item.id}
                             renderItem={renderKiddingPairs}
                         />
 
@@ -131,7 +131,7 @@ const HomeScreen = ({navigation}) => {
                     <View style={styles.listView}>
                         <FlatList
                             data={breedingPairs}
-                            keyExtractor={(item) => item.doe}
+                            keyExtractor={(item) => item.id}
                             renderItem={renderKiddingPairs}
                         />
 

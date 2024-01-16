@@ -3,9 +3,10 @@ import {View, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-nat
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TouchableOpacity} from "react-native";
-//import { RadioButton } from 'react-native-paper';
-import {RadioGroup} from 'react-native-ui-lib';
-import {RadioButton} from "react-native-ui-lib";
+import { RadioButton } from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker';
+//import {RadioGroup} from 'react-native-ui-lib';
+//import {RadioButton} from "react-native-ui-lib";
 import KiddingEntry from "../components/KiddingEntry"; //eslint-disable-line
 
 const AddBreedingPairScreen = props => {
@@ -87,6 +88,15 @@ const AddBreedingPairScreen = props => {
         );
     }
 
+    const calculateKiddingDate = () => {
+        if ((gestationCalculatorMode) === 'standard') {
+
+        }
+        if (gestationCalculatorMode === 'mini') {
+
+        }
+
+    }
 
     return (
             <View style={styles.mainContainer}>
@@ -122,22 +132,33 @@ const AddBreedingPairScreen = props => {
                         />
                     </View>
                     <View>
-                        <RadioGroup initialValue={gestationCalculatorMode} onValueChange={value => setGestationCalculatorMode(value)}>
-                            {renderGestationCalculatorOption('#000034', 'standard', 'Standard')}
-                            {renderGestationCalculatorOption('#000034', 'mini', 'Mini')}
-                            {renderGestationCalculatorOption('#000034', 'custom', 'Custom')}
-                        </RadioGroup>
+                        <Text style={styles.kiddingEntryLabel}>Calculate Kidding Date</Text>
+                        <RadioButton.Group
+                            onValueChange={(newValue) => setGestationCalculatorMode(newValue)}
+                            value={gestationCalculatorMode}
+                        >
+                            <RadioButton.Item label="Standard Breed" value="standard" />
+                            <RadioButton.Item label="Mini Breed" value="mini" />
+                            <RadioButton.Item label="Custom Kidding Date" value="custom" />
+                        </RadioButton.Group>
                     </View>
-                    <View style={styles.singleTextItemContainer}>
-                        <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                        <TextInput
-                            style={styles.kiddingEntryText}
-                            placeholderTextColor='grey'
-                            placeholder={'Kidding Date'}
-                            value={kiddingDate}
-                            onChangeText={text => setKiddingDate(text)}
-                        />
-                    </View>
+                    {gestationCalculatorMode === 'custom' ? (
+                        <View style={styles.singleTextItemContainer}>
+                            <Text style={styles.kiddingEntryLabel}>Due: </Text>
+                            <TextInput
+                                style={styles.kiddingEntryText}
+                                placeholderTextColor='grey'
+                                placeholder={'Kidding Date'}
+                                value={kiddingDate}
+                                onChangeText={text => setKiddingDate(text)}
+                            />
+                        </View>
+                    ) : (
+                        <View style={styles.singleTextItemContainer}>
+                            <Text style={styles.kiddingEntryLabel}>Due: </Text>
+                            <Text style={styles.kiddingEntryText}>{kiddingDate}</Text>
+                        </View>
+                    )}
 
                 </View>
                 <View style={styles.buttonContainer}>

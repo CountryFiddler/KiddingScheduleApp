@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
+import {View, SafeAreaView, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TouchableOpacity} from "react-native";
@@ -13,9 +13,16 @@ const AddBreedingPairScreen = props => {
 
     const [doe, setDoe] = useState('');
     const [buck, setBuck] = useState('');
-    const [breedingDate, setBreedingDate] = useState('');
-    const [kiddingDate, setKiddingDate] = useState('');
+    //const [breedingDate, setBreedingDate] = useState(new Date());
+    const [breedingDate, setBreedingDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+    const [kiddingDate, setKiddingDate] = useState(new Date());
     const [gestationCalculatorMode, setGestationCalculatorMode] = useState('standard');
+    const [breedingDateSelected, setBreedingDateSelected] = useState(false);
+    // Used so that if the user doesn't make changes in the date picker, that the selected date by the
+    // user shows right after the "Bred: " label
+    const [isCurDateBreedingDate, setIsCurDateBreedingDate] = useState(true);
 
     const breedingPair = {
         doe: doe,
@@ -24,6 +31,34 @@ const AddBreedingPairScreen = props => {
         kiddingDate: kiddingDate,
         id: '',
     }
+
+
+    const onChange = (event, selectedDate) => {
+        setIsCurDateBreedingDate(false);
+        const currentDate = selectedDate;
+        //setShow(false);
+        setBreedingDateSelected(true);
+        setBreedingDate(currentDate);
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
+    const showDatepicker = () => {
+        showMode('date');
+    };
+
+    const submitBreedingDate = () => {
+        if (isCurDateBreedingDate) {
+            setBreedingDateSelected(true);
+            //calculateKiddingDate();
+        }
+        calculateKiddingDate();
+        setShow(false);
+
+    };
 
     async function storeBreedingPair (key, newData) {
         try {
@@ -58,7 +93,7 @@ const AddBreedingPairScreen = props => {
                     console.log('Array concatenated and stored successfully.');
                     setDoe('');
                     setBuck('');
-                    setBreedingDate('');
+                    setBreedingDate(null);
                     setKiddingDate('');
                     props.navigation.navigate('HomeScreen')
 
@@ -89,14 +124,23 @@ const AddBreedingPairScreen = props => {
     }
 
     const calculateKiddingDate = () => {
+        // Add 10 days to the existing date
+        const newDate = new Date(breedingDate);
+        //newDate.setDate(breedingDate.getDate() + 150);
         if ((gestationCalculatorMode) === 'standard') {
-
+            newDate.setDate(breedingDate.getDate() + 150);
+            setKiddingDate(newDate.toDateString());
         }
         if (gestationCalculatorMode === 'mini') {
-
+            newDate.setDate(breedingDate.getDate() + 145);
+            setKiddingDate(newDate.toDateString());
         }
 
     }
+
+    useEffect(() => {
+        calculateKiddingDate()
+    }, [gestationCalculatorMode])
 
     return (
             <View style={styles.mainContainer}>
@@ -122,14 +166,33 @@ const AddBreedingPairScreen = props => {
                         />
                     </View>
                     <View style={styles.singleTextItemContainer}>
-                        <Text style={styles.kiddingEntryLabel}>Bred: </Text>
-                        <TextInput
-                            style={styles.kiddingEntryText}
-                            placeholderTextColor='grey'
-                            placeholder={'Breeding Date'}
-                            value={breedingDate}
-                            onChangeText={text => setBreedingDate(text)}
-                        />
+                        <TouchableOpacity style={styles.singleTextItemContainer} onPress={showDatepicker}>
+                            <Text style={styles.kiddingEntryLabel}>Bred: </Text>
+                            {!breedingDateSelected ? (
+                                <Text style={styles.kiddingEntryText}>Select Breeding Date</Text>
+                            ) : (
+                                <Text style={styles.kiddingEntryLabel}>{breedingDate.toDateString()}</Text>
+                            )}
+                        </TouchableOpacity>
+
+                    </View>
+                    <View>
+                        {show && (
+                            <View>
+                            <DateTimePicker
+                                testID="dateTimePicker"
+                                value={breedingDate}
+                                mode={mode}
+                                display={'spinner'}
+                                is24Hour={true}
+                                onChange={onChange}
+                            />
+                                <TouchableOpacity onPress={() => submitBreedingDate()}>
+                                    <Text style={styles.kiddingEntryLabel}>Submit</Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        )}
                     </View>
                     <View>
                         <Text style={styles.kiddingEntryLabel}>Calculate Kidding Date</Text>
@@ -156,7 +219,7 @@ const AddBreedingPairScreen = props => {
                     ) : (
                         <View style={styles.singleTextItemContainer}>
                             <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                            <Text style={styles.kiddingEntryText}>{kiddingDate}</Text>
+                            <Text style={styles.kiddingEntryText}>{kiddingDate.toDateString()}</Text>
                         </View>
                     )}
 

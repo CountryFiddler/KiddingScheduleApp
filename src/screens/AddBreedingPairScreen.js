@@ -13,11 +13,11 @@ const AddBreedingPairScreen = props => {
 
     const [doe, setDoe] = useState('');
     const [buck, setBuck] = useState('');
-    //const [breedingDate, setBreedingDate] = useState(new Date());
     const [breedingDate, setBreedingDate] = useState(new Date());
+    const [tempBreedingDate, setTempBreedingDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [kiddingDate, setKiddingDate] = useState(new Date());
+    const [kiddingDate, setKiddingDate] = useState('');
     const [gestationCalculatorMode, setGestationCalculatorMode] = useState('standard');
     const [breedingDateSelected, setBreedingDateSelected] = useState(false);
     // Used so that if the user doesn't make changes in the date picker, that the selected date by the
@@ -27,7 +27,7 @@ const AddBreedingPairScreen = props => {
     const breedingPair = {
         doe: doe,
         buck: buck,
-        breedingDate: breedingDate,
+        breedingDate: breedingDate.toDateString(),
         kiddingDate: kiddingDate,
         id: '',
     }
@@ -38,7 +38,7 @@ const AddBreedingPairScreen = props => {
         const currentDate = selectedDate;
         //setShow(false);
         setBreedingDateSelected(true);
-        setBreedingDate(currentDate);
+        setTempBreedingDate(currentDate);
     };
 
     const showMode = (currentMode) => {
@@ -55,7 +55,8 @@ const AddBreedingPairScreen = props => {
             setBreedingDateSelected(true);
             //calculateKiddingDate();
         }
-        calculateKiddingDate();
+        setBreedingDate(tempBreedingDate);
+        calculateKiddingDate(tempBreedingDate);
         setShow(false);
 
     };
@@ -93,8 +94,8 @@ const AddBreedingPairScreen = props => {
                     console.log('Array concatenated and stored successfully.');
                     setDoe('');
                     setBuck('');
-                    setBreedingDate(null);
-                    setKiddingDate('');
+                    //setBreedingDate('');
+                    //setKiddingDate('');
                     props.navigation.navigate('HomeScreen')
 
                 } else {
@@ -123,7 +124,7 @@ const AddBreedingPairScreen = props => {
         );
     }
 
-    const calculateKiddingDate = () => {
+    const calculateKiddingDate = (breedingDate) => {
         // Add 10 days to the existing date
         const newDate = new Date(breedingDate);
         //newDate.setDate(breedingDate.getDate() + 150);
@@ -135,11 +136,14 @@ const AddBreedingPairScreen = props => {
             newDate.setDate(breedingDate.getDate() + 145);
             setKiddingDate(newDate.toDateString());
         }
+        if (gestationCalculatorMode === 'custom') {
+            setKiddingDate('');
+        }
 
     }
 
     useEffect(() => {
-        calculateKiddingDate()
+        calculateKiddingDate(breedingDate)
     }, [gestationCalculatorMode])
 
     return (
@@ -178,7 +182,7 @@ const AddBreedingPairScreen = props => {
                     </View>
                     <View>
                         {show && (
-                            <View>
+                            <View style={styles.datePickerContainer}>
                             <DateTimePicker
                                 testID="dateTimePicker"
                                 value={breedingDate}
@@ -187,22 +191,32 @@ const AddBreedingPairScreen = props => {
                                 is24Hour={true}
                                 onChange={onChange}
                             />
+                                <View style={styles.buttonContainer}>
+                                <TouchableOpacity onPress={() => setShow(false)}>
+                                    <Text style={styles.kiddingEntryLabel}>Cancel</Text>
+                                </TouchableOpacity>
                                 <TouchableOpacity onPress={() => submitBreedingDate()}>
                                     <Text style={styles.kiddingEntryLabel}>Submit</Text>
                                 </TouchableOpacity>
+                                </View>
 
                             </View>
                         )}
                     </View>
                     <View>
+                        <View style={styles.centerColumnView}>
                         <Text style={styles.kiddingEntryLabel}>Calculate Kidding Date</Text>
+                        <Text style={[styles.kiddingEntryText, {marginTop: '5%'}]}>Select Breed Type</Text>
+                        </View>
                         <RadioButton.Group
                             onValueChange={(newValue) => setGestationCalculatorMode(newValue)}
                             value={gestationCalculatorMode}
                         >
-                            <RadioButton.Item label="Standard Breed" value="standard" />
-                            <RadioButton.Item label="Mini Breed" value="mini" />
-                            <RadioButton.Item label="Custom Kidding Date" value="custom" />
+                            <View style={styles.radioButtonContainer}>
+                            <RadioButton.Item label="Standard" value="standard" />
+                            <RadioButton.Item label="Mini" value="mini" />
+                            <RadioButton.Item label="Custom Date" value="custom" />
+                            </View>
                         </RadioButton.Group>
                     </View>
                     {gestationCalculatorMode === 'custom' ? (
@@ -219,7 +233,7 @@ const AddBreedingPairScreen = props => {
                     ) : (
                         <View style={styles.singleTextItemContainer}>
                             <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                            <Text style={styles.kiddingEntryText}>{kiddingDate.toDateString()}</Text>
+                            <Text style={styles.kiddingEntryText}>{kiddingDate}</Text>
                         </View>
                     )}
 
@@ -245,7 +259,11 @@ const styles = StyleSheet.create({
     singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
     kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#000034'},
     kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#000034'},
-    buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'}
+    buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'},
+    radioButtonContainer: {flexDirection: 'row', justifyContent: 'space-around',  width: '100%', marginTop: '2%'},
+    datePickerContainer: {flexDirection: 'column', alignItems: 'center'},
+    centerColumnView: {flexDirection: 'column', alignItems: 'center', marginTop: '5%'},
+
 });
 
 export default AddBreedingPairScreen;

@@ -14,6 +14,10 @@ const KiddingEntry = props => {
 
     const [editMode, setEditMode] = useState(props.editMode)
 
+    const breedingDate = new Date(props.breedingDate);
+
+    const kiddingDate = new Date(props.kiddingDate);
+
     //console.log(editMode);
     /*const fetchFonts = async () =>
         await Font.loadAsync({

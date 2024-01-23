@@ -116,14 +116,6 @@ const AddBreedingPairScreen = props => {
         }
     };
 
-    const renderGestationCalculatorOption = ( {color, gestationOption, label} ) => {
-        return (
-            <View >
-                <RadioButton value={gestationOption} label={label}/>
-            </View>
-        );
-    }
-
     const calculateKiddingDate = (breedingDate) => {
         // Add 10 days to the existing date
         const newDate = new Date(breedingDate);

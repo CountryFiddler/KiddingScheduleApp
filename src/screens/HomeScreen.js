@@ -15,12 +15,19 @@ import {Touchable} from "react-native-web";
 
 const HomeScreen = ({navigation}) => {
 
+    const [breedingPairs, setBreedingPairs] = useState([]);
+
+   // const [breedingPairsExist, setBreedingPairsExist] = useState(true);
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [editMode, setEditMode] = useState(false);
 
     const fetchBreedingPairs = async () => {
         try {
             // Fetch data from AsyncStorage
             const dataString = await AsyncStorage.getItem('breedingPairs');
-
+            console.log(dataString)
             if (dataString !== null) {
                 // Parse the data if it's not null
                 const data = dataString ? JSON.parse(dataString) : [];
@@ -31,6 +38,7 @@ const HomeScreen = ({navigation}) => {
             } else {
                 // Data is not available
                 console.log('No data found');
+                //setBreedingPairsExist(false);
             }
         } catch (error) {
             // Handle errors
@@ -44,11 +52,6 @@ const HomeScreen = ({navigation}) => {
         })
     }*/
 
-    const [breedingPairs, setBreedingPairs] = useState([]);
-
-    const [isLoading, setIsLoading] = useState(true);
-
-    const [editMode, setEditMode] = useState(false);
 
 
    // const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -67,7 +70,7 @@ const HomeScreen = ({navigation}) => {
             fetchBreedingPairs().then((token) => {
                 setBreedingPairs(token);
                 setIsLoading(false);
-                console.log(breedingPairs.length)
+                //console.log(breedingPairs.length)
                 console.log(breedingPairs)
                // console.log('Rerender');
             });

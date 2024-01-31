@@ -90,9 +90,10 @@ const styles = StyleSheet.create({
     multipleItemsContainer: {flexDirection: "row", justifyContent: 'space-around', margin: '2%'},
     importantDatesContainer: {},
     singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
-    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#000034'},
-    kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#000034'},
-    decorativeLine: {borderWidth: '3px', borderColor: '#000034', marginTop: '2%', borderRadius: '10%', width: '95%'},
+    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#12284B'},
+    kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
+    decorativeLine: {borderWidth: '2px', borderColor: '#B6922E', marginTop: '2%', borderRadius: '10%', width: '95%'
+    , backgroundColor: '#B6922E'},
 })
 
 export default KiddingEntry;

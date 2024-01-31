@@ -7,7 +7,9 @@ import { RadioButton } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
 //import {RadioGroup} from 'react-native-ui-lib';
 //import {RadioButton} from "react-native-ui-lib";
-import KiddingEntry from "../components/KiddingEntry"; //eslint-disable-line
+import KiddingEntry from "../components/KiddingEntry";
+import {Feather} from "@expo/vector-icons"; //eslint-disable-line
+import { AntDesign } from '@expo/vector-icons';
 
 const AddBreedingPairScreen = props => {
 
@@ -162,7 +164,7 @@ const AddBreedingPairScreen = props => {
                         />
                     </View>
                     <View style={styles.singleTextItemContainer}>
-                        <TouchableOpacity style={styles.singleTextItemContainer} onPress={showDatepicker}>
+                        <TouchableOpacity style={styles.singleTextItemContainerNoPadding} onPress={showDatepicker}>
                             <Text style={styles.kiddingEntryLabel}>Bred: </Text>
                             {!breedingDateSelected ? (
                                 <Text style={styles.kiddingEntryText}>Select Breeding Date</Text>
@@ -184,60 +186,79 @@ const AddBreedingPairScreen = props => {
                                 onChange={onChange}
                             />
                                 <View style={styles.buttonContainer}>
-                                <TouchableOpacity onPress={() => setShow(false)}>
-                                    <Text style={styles.kiddingEntryLabel}>Cancel</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => submitBreedingDate()}>
-                                    <Text style={styles.kiddingEntryLabel}>Submit</Text>
-                                </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => setShow(false)}>
+                                        <View style={styles.cancelButtonContainer}>
+                                            <Text style={styles.cancelButtonText}>Cancel</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => submitBreedingDate()}>
+                                        <View style={styles.submitButtonContainer}>
+                                            <Text style={styles.submitButtonText}>Submit</Text>
+                                        </View>
+                                    </TouchableOpacity>
                                 </View>
 
                             </View>
                         )}
                     </View>
-                    <View>
-                        <View style={styles.centerColumnView}>
-                        <Text style={styles.kiddingEntryLabel}>Calculate Kidding Date</Text>
-                        <Text style={[styles.kiddingEntryText, {marginTop: '5%'}]}>Select Breed Type</Text>
+                    {!show ? (
+                            <View>
+                                <View>
+                                    <View style={styles.centerColumnView}>
+                                        <Text style={styles.kiddingEntryLabel}>Calculate Kidding Date</Text>
+                                        <View style={styles.decorativeLine2}/>
+                                    </View>
+                                    <RadioButton.Group
+                                        onValueChange={(newValue) => setGestationCalculatorMode(newValue)}
+                                        value={gestationCalculatorMode}
+                                    >
+                                        <View style={styles.radioButtonContainer}>
+                                            <RadioButton.Item color='#B6922E' label="Standard Breed" value="standard"/>
+                                            <RadioButton.Item color='#B6922E' label="Mini Breed" value="mini" />
+                                            <RadioButton.Item color='#B6922E' label="Custom Date" value="custom" />
+                                        </View>
+                                    </RadioButton.Group>
+                                </View>
+                                <View style={styles.decorativeLine2}/>
+                                {gestationCalculatorMode === 'custom' ? (
+                                    <View style={styles.singleTextItemContainer}>
+                                        <Text style={styles.kiddingEntryLabel}>Due: </Text>
+                                        <TextInput
+                                            style={styles.kiddingEntryText}
+                                            placeholderTextColor='grey'
+                                            placeholder={'Kidding Date'}
+                                            value={kiddingDate}
+                                            onChangeText={text => setKiddingDate(text)}
+                                        />
+                                    </View>
+                                ) : (
+                                    <View style={styles.singleTextItemContainer}>
+                                        <Text style={styles.kiddingEntryLabel}>Due: </Text>
+                                        <Text style={styles.kiddingEntryText}>{kiddingDate}</Text>
+                                    </View>
+                                )}
+
+
+                        <View style={styles.decorativeLine2}/>
+
+
+                        <View style={styles.buttonContainer}>
+                        <TouchableOpacity onPress={() => props.navigation.navigate('HomeScreen')}>
+                        <View style={styles.cancelButtonContainer}>
+                        <Text style={styles.cancelButtonText}>Cancel</Text>
                         </View>
-                        <RadioButton.Group
-                            onValueChange={(newValue) => setGestationCalculatorMode(newValue)}
-                            value={gestationCalculatorMode}
-                        >
-                            <View style={styles.radioButtonContainer}>
-                            <RadioButton.Item label="Standard" value="standard" />
-                            <RadioButton.Item label="Mini" value="mini" />
-                            <RadioButton.Item label="Custom Date" value="custom" />
-                            </View>
-                        </RadioButton.Group>
-                    </View>
-                    {gestationCalculatorMode === 'custom' ? (
-                        <View style={styles.singleTextItemContainer}>
-                            <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                            <TextInput
-                                style={styles.kiddingEntryText}
-                                placeholderTextColor='grey'
-                                placeholder={'Kidding Date'}
-                                value={kiddingDate}
-                                onChangeText={text => setKiddingDate(text)}
-                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {storeBreedingPair('breedingPairs', breedingPair)}}>
+                        <View style={styles.submitButtonContainer}>
+                        <Text style={styles.submitButtonText}>Submit</Text>
                         </View>
-                    ) : (
-                        <View style={styles.singleTextItemContainer}>
-                            <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                            <Text style={styles.kiddingEntryText}>{kiddingDate}</Text>
+                        </TouchableOpacity>
                         </View>
-                    )}
+                        </View>
+                    ) : null}
 
                 </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate('HomeScreen')}>
-                        <Text style={styles.kiddingEntryLabel}>Close</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {storeBreedingPair('breedingPairs', breedingPair)}}>
-                        <Text style={styles.kiddingEntryLabel}>Submit</Text>
-                    </TouchableOpacity>
-                </View>
+
             </View>
     );
 };
@@ -247,14 +268,28 @@ const AddBreedingPairScreen = props => {
 
 const styles = StyleSheet.create({
     mainContainer: {flexDirection: "column", justifyContent: 'space-around', alignItems: 'center'},
-    contentContainer: {flexDirection: "column", width: '95%', marginLeft: '2%', margin: '2%'},
-    singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
-    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#000034'},
-    kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#000034'},
-    buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'},
-    radioButtonContainer: {flexDirection: 'row', justifyContent: 'space-around',  width: '100%', marginTop: '2%'},
+    contentContainer: {flexDirection: "column", justifyContent: 'space-around', width: '95%', marginLeft: '2%', margin: '2%'},
+    singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', paddingVertical: 5},
+    singleTextItemContainerNoPadding: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
+    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#12284B'},
+    kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
+    buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '5%'},
+    radioButtonContainer: {flexDirection: 'column', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'},
+    radioButtonColor: {color: '#B6922E'},
     datePickerContainer: {flexDirection: 'column', alignItems: 'center'},
     centerColumnView: {flexDirection: 'column', alignItems: 'center', marginTop: '5%'},
+    submitButtonContainer: {flexDirection: 'column', alignItems: 'center', marginTop: '5%', backgroundColor: '#12284b', borderRadius: '10%', borderWidth: '3px',
+    borderColor: '#12284B'},
+    submitButtonText: {fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: 'white', padding: 10},
+    cancelButtonContainer: {flexDirection: 'column', alignItems: 'center', marginTop: '5%', borderWidth: '3px', borderColor: 'rgba(18, 40, 75, 0.85)',
+        borderRadius: '10%'},
+    cancelButtonText: {fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: 'rgba(18, 40, 75, 0.85)', padding: 10},
+    decorativeLine: {borderWidth: '2px', borderColor: '#B6922E', marginTop: '2%', borderRadius: '10%', width: '95%'
+        , backgroundColor: '#000034'},
+    decorativeLine2: {borderWidth: '2px', borderColor: '#B6922E', marginTop: '2%', marginBottom: '2%', borderRadius: '10%', width: '100%'
+        , backgroundColor: '#000034'},
+    decorativeLine3: {borderWidth: '2px', borderColor: '#B6922E', borderRadius: '10%', width: '100%'
+        , backgroundColor: '#000034'},
 
 });
 

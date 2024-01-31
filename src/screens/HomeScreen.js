@@ -23,6 +23,9 @@ const HomeScreen = ({navigation}) => {
 
     const [editMode, setEditMode] = useState(false);
 
+    const deleteBreedingPairs = async () => {
+        await AsyncStorage.removeItem('breedingPairs');
+    }
     const fetchBreedingPairs = async () => {
         try {
             // Fetch data from AsyncStorage
@@ -120,7 +123,7 @@ const HomeScreen = ({navigation}) => {
                             <Text style={styles.welcomeMessageText}>Click on a breeding pair to edit</Text>
 
                         </View>
-                    <View style={styles.listView}>
+                    <View style={styles.editListView}>
                         <FlatList
                             data={breedingPairs}
                             keyExtractor={(item) => item.id}
@@ -210,10 +213,11 @@ const styles = StyleSheet.create({
         iconButtons: {margin: '2%'},
         headerContainer: { flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', width: '95%'
         , marginTop: '2%', height: '5%'},
-        headers: {fontWeight: "bold", fontSize: 24, fontFamily: 'WestonFree', color: '#000034'},
-        listView: {marginTop: '2%', width: '100%'},
+        headers: {fontWeight: "bold", fontSize: 24, fontFamily: 'WestonFree', color: '#12284B'},
+        listView: {marginTop: '2%', width: '100%', flex: 1},
+        editListView: {marginTop: '2%', width: '100%'},
         welcomeMessageContainer: {flex: 1, width: '95%',  alignItems: 'center', marginTop: '15%'},
-        welcomeMessageText: {fontWeight: "bold", fontSize: 18, fontFamily: 'WestonFree', color: '#000034', lineHeight: 35, textAlign: 'center'},
+        welcomeMessageText: {fontWeight: "bold", fontSize: 18, fontFamily: 'WestonFree', color: '#12284B', lineHeight: 35, textAlign: 'center'},
         editModeContainer: {width: '100%',  alignItems: 'center', marginTop: '5%'},
 })
 

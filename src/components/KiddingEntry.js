@@ -70,8 +70,8 @@ const KiddingEntry = props => {
                             <Text style={styles.kiddingEntryText}>{props.breedingDate}</Text>
                         </View>
                         <View style={styles.singleTextItemContainer}>
-                            <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                            <Text style={styles.kiddingEntryText}>{props.kiddingDate}</Text>
+                            <Text style={styles.dueDateLabel}>Due: </Text>
+                            <Text style={styles.dueDateText}>{props.kiddingDate}</Text>
                         </View>
                     </View>
                 <View style={styles.decorativeLine}/>
@@ -92,8 +92,10 @@ const styles = StyleSheet.create({
     singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
     kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#12284B'},
     kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
-    decorativeLine: {borderWidth: '2px', borderColor: '#B6922E', marginTop: '2%', borderRadius: '10%', width: '95%'
-    , backgroundColor: '#B6922E'},
+    dueDateText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#B6922E'},
+    dueDateLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#B6922E'},
+    decorativeLine: {borderWidth: '2px', borderColor: '#12284B', marginTop: '2%', borderRadius: '10%', width: '95%'
+    , backgroundColor: '#12284B'},
 })
 
 export default KiddingEntry;

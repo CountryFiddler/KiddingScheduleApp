@@ -4,6 +4,7 @@ import {View, Text, Modal, Button, StyleSheet, TextInput, TouchableOpacity} from
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {RadioButton} from "react-native-paper";
+import {DeleteBreedingPairModal} from "../components/DeleteBreedingPairModal";
 
 const EditBreedingPairScreen = props => {
 
@@ -29,6 +30,9 @@ const EditBreedingPairScreen = props => {
     const [isCurDateBreedingDate, setIsCurDateBreedingDate] = useState(true);
     const [tempBreedingDate, setTempBreedingDate] = useState(new Date());
 
+    const [deletePairModalVisible, setDeletePairModalVisible] = useState(false);
+    const [triggerDeleteBreedingPair, setTriggerDeleteBreedingPair] = useState(false);
+
     //console.log(doe);
     //console.log(buck);
     //console.log(breedingDate);
@@ -49,6 +53,20 @@ const EditBreedingPairScreen = props => {
         kiddingDate: originalKiddingDate,
         id: id,
     }
+
+    const closeDeletePairModal = () => {
+        setDeletePairModalVisible(false);
+    };
+
+    const openDeletePairModal = () => {
+        setDeletePairModalVisible(true);
+    };
+
+    const deletePairCallback = (deletePair) => {
+        if (deletePair) {
+            deleteBreedingPair('breedingPairs', breedingPair)
+        }
+    };
 
     const onChange = (event, selectedDate) => {
         setIsCurDateBreedingDate(false);
@@ -186,6 +204,14 @@ const EditBreedingPairScreen = props => {
         calculateKiddingDate(breedingDate)
     }, [gestationCalculatorMode])
 
+    useEffect(() => {
+        calculateKiddingDate(breedingDate)
+    }, [deleteBreedingPair])
+
+    /*useEffect(() => {
+        deleteBreedingPair('breedingPairs', breedingPair)
+    }, [triggerDeleteBreedingPair])
+*/
     /*return (
         <View style={styles.mainContainer}>
             <View style={styles.contentContainer}>
@@ -352,10 +378,14 @@ const styles = StyleSheet.create({
                                 />
                                 <View style={styles.buttonContainer}>
                                     <TouchableOpacity onPress={() => setShow(false)}>
-                                        <Text style={styles.kiddingEntryLabel}>Cancel</Text>
+                                        <View style={styles.cancelButtonContainer}>
+                                            <Text style={styles.cancelButtonText}>Cancel</Text>
+                                        </View>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={() => submitBreedingDate()}>
-                                        <Text style={styles.kiddingEntryLabel}>Submit</Text>
+                                        <View style={styles.submitButtonContainer}>
+                                            <Text style={styles.submitButtonText}>Submit</Text>
+                                        </View>
                                     </TouchableOpacity>
                                 </View>
 
@@ -416,12 +446,14 @@ const styles = StyleSheet.create({
                             </TouchableOpacity>
                         </View>
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity onPress={() => {deleteBreedingPair('breedingPairs', breedingPair)}}>
+                            <TouchableOpacity onPress={() => {openDeletePairModal()}}>
                                 <View style={styles.deleteButtonContainer}>
                                     <Text style={styles.deleteButtonText}>Delete</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
+                        <DeleteBreedingPairModal visible={deletePairModalVisible} closeModal={closeDeletePairModal}
+                                                 deleteBreedingPair={deletePairCallback}/>
                     </View>
                 ) : null}
 
@@ -431,6 +463,13 @@ const styles = StyleSheet.create({
     );
 };
 
+/*
+                            <TouchableOpacity onPress={() => {deleteBreedingPair('breedingPairs', breedingPair)}}>
+                                <View style={styles.deleteButtonContainer}>
+                                    <Text style={styles.deleteButtonText}>Delete</Text>
+                                </View>
+                            </TouchableOpacity>
+ */
 const styles = StyleSheet.create({
     mainContainer: {flexDirection: "column", justifyContent: 'space-around', alignItems: 'center'},
     contentContainer: {flexDirection: "column", justifyContent: 'space-around', width: '95%', marginLeft: '2%', margin: '2%'},

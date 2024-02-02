@@ -1,73 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
+import {View, Text, Modal, Button, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 //import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const DeleteBreedingPairModal = ({ visible, closeModal, deletedBreedingPair,doe, buck, breedingDate, kiddingDate }) => {
+export const DeleteBreedingPairModal = ({ visible, closeModal, deleteBreedingPair }) => {
 
-    const [currentDoe, setCurrentDoe] = useState(doe);
-    const [currentBuck, setCurrentBuck] = useState(buck);
-    const [currentBreedingDate, setCurrentBreedingDate] = useState(breedingDate);
-    const [currentKiddingDate, setCurrentKiddingDate] = useState(kiddingDate);
-
-    const [reRenderModal, setReRenderModal] = useState(false);
-
-    const breedingPair = {
-        doe: doe,
-        buck: buck,
-        breedingDate: breedingDate,
-        kiddingDate: kiddingDate,
-    }
-
-    const closeEditModal = () => {
-        //setCurrentDoe('');
-        //setCurrentBuck('');
-        /// setCurrentBreedingDate('');
-        // setCurrentKiddingDate('');
-        // setReRenderModal(true);
-        deletedBreedingPair();
+    const closeDeleteModal = () => {
         closeModal();
     };
 
-    async function deleteBreedingPair (key, pairToDelete) {
-        try {
-            //const [dataArray, setDataArray] = useState([]);
-            // Step 1: Retrieve existing array from AsyncStorage
-            const existingData = await AsyncStorage.getItem(key);
-            //  console.log(!Array.isArray(existingData));
-            // console.log(existingData);
-            const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
-            // Step 2: Concatenate the new data to the existing array
-            console.log('Delete this pair: ' + pairToDelete.doe)
-            //console.log(parsedExistingBreedingPairs);
-            // Modify the array to remove the item
-            for (let i = 0; i < parsedExistingBreedingPairs.length; i++) {
-                console.log(parsedExistingBreedingPairs[i]);
-                if (parsedExistingBreedingPairs[i].doe === pairToDelete.doe) {
-                    console.log('Success');
-                    parsedExistingBreedingPairs.splice(i);
-                }
-            }
-            const updatedArray = parsedExistingBreedingPairs.filter(item => item !== pairToDelete);
-            //console.log(updatedArray);
-
-            // await AsyncStorage.removeItem(key);
-            // Save the modified array back to AsyncStorage
-            await AsyncStorage.setItem(key, JSON.stringify(updatedArray));
-
-            // Update the state with the modified array
-            //setDataArray(updatedArray);
-            console.log('Array concatenated and stored successfully.');
-            deletedBreedingPair();
-            closeModal();
-            setCurrentDoe('');
-            setCurrentBuck('');
-            setCurrentBreedingDate('');
-            setCurrentKiddingDate('');
-        } catch (error) {
-            console.error('Error concatenating array:', error);
-        }
+    const triggerDelete = () => {
+        deleteBreedingPair(true);
+        closeModal();
     };
+
 
     return (
         <Modal
@@ -80,38 +26,20 @@ export const DeleteBreedingPairModal = ({ visible, closeModal, deletedBreedingPa
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text>This is your modal content!</Text>
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={doe}
-                        onChangeText={text => setCurrentDoe(text)}
-                        value={currentDoe}
-                    />
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={buck}
-                        value={currentBuck}
-                        onChangeText={text => setCurrentBuck(text)}
-                    />
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={breedingDate}
-                        value={currentBreedingDate}
-                        onChangeText={text => setCurrentBreedingDate(text)}
-                    />
-                    <TextInput
-                        style={styles.textInputText}
-                        placeholderTextColor='grey'
-                        placeholder={kiddingDate}
-                        value={currentKiddingDate}
-                        onChangeText={text => setCurrentKiddingDate(text)}
-                    />
-                    <Button title="Close Modal" onPress={closeEditModal} />
-                    <Button title="Submit" onPress={() => storeBreedingPair('breedingPairs', breedingPair)} />
-                    <Button title="Delete Pair" onPress={() => deleteBreedingPair('breedingPairs', breedingPair)} />
+                    <Text style={styles.kiddingEntryLabel}>Are you sure you want to delete this breeding pair?</Text>
+                    <View style={styles.decorativeLine2}/>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity onPress={closeDeleteModal}>
+                            <View style={styles.cancelButtonContainer}>
+                                <Text style={styles.cancelButtonText}>Cancel</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {triggerDelete()}}>
+                            <View style={styles.deleteButtonContainer}>
+                                <Text style={styles.deleteButtonText}>Delete</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -123,12 +51,15 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+     //   alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
         backgroundColor: 'white',
-        padding: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 100,
+        paddingHorizontal: 25,
         borderRadius: 10,
         elevation: 5,
     },
@@ -137,4 +68,13 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 17,
     },
+    kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B', textAlign: 'center'},
+    buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '5%'},
+    cancelButtonContainer: {flexDirection: 'column', alignItems: 'center', marginTop: '5%', borderWidth: '3px', borderColor: 'rgba(18, 40, 75, 0.85)',
+        borderRadius: '10%'},
+    cancelButtonText: {fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: 'rgba(18, 40, 75, 0.85)', padding: 10},
+    deleteButtonContainer: {flexDirection: 'column', alignItems: 'center', marginTop: '5%', borderWidth: '3px', borderColor: '#C41E3A',
+        borderRadius: '10%'},
+    deleteButtonText: {fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#C41E3A', padding: 10},
+    decorativeLine2: {borderWidth: '2px', borderColor: '#B6922E', marginTop: '5%',  borderRadius: '10%', width: '100%'},
 });

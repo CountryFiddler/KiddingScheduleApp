@@ -46,8 +46,8 @@ const KiddingEntry = props => {
                         <Text style={styles.kiddingEntryText}>{props.breedingDate}</Text>
                     </View>
                     <View style={styles.singleTextItemContainer}>
-                        <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                        <Text style={styles.kiddingEntryText}>{props.kiddingDate}</Text>
+                        <Text style={styles.dueDateLabel}>Due: </Text>
+                        <Text style={styles.dueDateText}>{props.kiddingDate}</Text>
                     </View>
                 </TouchableOpacity>
                 <View style={styles.decorativeLine}/>

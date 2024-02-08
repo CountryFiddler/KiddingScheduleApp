@@ -167,7 +167,7 @@ const AddBreedingPairScreen = props => {
                         <TouchableOpacity style={styles.singleTextItemContainerNoPadding} onPress={showDatepicker}>
                             <Text style={styles.kiddingEntryLabel}>Bred: </Text>
                             {!breedingDateSelected ? (
-                                <Text style={styles.kiddingEntryText}>Select Breeding Date</Text>
+                                <Text style={styles.selectBreedingDateText}>Select Breeding Date</Text>
                             ) : (
                                 <Text style={styles.kiddingEntryLabel}>{breedingDate.toDateString()}</Text>
                             )}
@@ -267,11 +267,12 @@ const AddBreedingPairScreen = props => {
 
 
 const styles = StyleSheet.create({
-    mainContainer: {flexDirection: "column", justifyContent: 'space-around', alignItems: 'center'},
+    mainContainer: {flex: 1, flexDirection: "column", alignItems: 'center', backgroundColor: 'white'},
     contentContainer: {flexDirection: "column", justifyContent: 'space-around', width: '95%', marginLeft: '2%', margin: '2%'},
     singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', paddingVertical: 5},
     singleTextItemContainerNoPadding: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
     kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#12284B'},
+    selectBreedingDateText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: 'grey'},
     kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
     buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '5%'},
     radioButtonContainer: {flexDirection: 'column', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'},

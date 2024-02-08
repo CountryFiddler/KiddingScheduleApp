@@ -10,6 +10,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import * as Font from 'expo-font'
 import * as SplashScreen from "expo-splash-screen";
 import {Feather, FontAwesome} from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons';
 import {Touchable} from "react-native-web";
 
 
@@ -96,16 +97,18 @@ const HomeScreen = ({navigation}) => {
                 <View style={styles.headerContainer}>
                     <Text style={styles.headers}>Kidding Schedule</Text>
                     {editMode ? (
-                        <TouchableOpacity onPress={() => setEditMode(false)}>
-                            <Text style={styles.headers}>Done</Text>
-                        </TouchableOpacity>
+                            <View style={styles.doneButtonContainer}>
+                                <TouchableOpacity  onPress={() => setEditMode(false)}>
+                                    <AntDesign name="closecircleo" size={33} color='#000034' />
+                                </TouchableOpacity>
+                            </View>
                     ) : (
                         <View style={styles.addOrEditButtonsContainer}>
                             <TouchableOpacity style={styles.iconButtons} onPress={() => navigation.navigate('AddBreedingPairScreen')}>
-                                <Feather name="plus" size={33} color={'#000034'} />
+                                <AntDesign name="plus" size={33} color={'#000034'} />
                             </TouchableOpacity>
                         <TouchableOpacity style={styles.iconButtons} onPress={() => setEditMode(true)}>
-                            <Feather name="edit-2" size={30} color={'#000034'} />
+                            <AntDesign name="edit" size={30} color={'#000034'} />
                         </TouchableOpacity>
                         </View>
                     )}
@@ -143,6 +146,7 @@ const HomeScreen = ({navigation}) => {
 
                     </View>
                 )}
+                <View style={styles.footerSpacing}/>
             </View>
         );
 };
@@ -208,7 +212,7 @@ const HomeScreen = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
-        mainContainer: {flex: 1, alignItems: 'center'},
+        mainContainer: {flex: 1, alignItems: 'center', backgroundColor: 'white'},
         addOrEditButtonsContainer: {flexDirection: 'row', width: '25%', justifyContent: 'space-between',},
         iconButtons: {margin: '2%'},
         headerContainer: { flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', width: '95%'
@@ -218,7 +222,11 @@ const styles = StyleSheet.create({
         editListView: {marginTop: '2%', width: '100%'},
         welcomeMessageContainer: {flex: 1, width: '95%',  alignItems: 'center', marginTop: '15%'},
         welcomeMessageText: {fontWeight: "bold", fontSize: 18, fontFamily: 'WestonFree', color: '#12284B', lineHeight: 35, textAlign: 'center'},
-        editModeContainer: {width: '100%',  alignItems: 'center', marginTop: '5%'},
+        editModeContainer: {flex: 1, width: '100%',  alignItems: 'center', marginTop: '5%', marginBottom: '10%'},
+        doneButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center'},
+        doneButtonText: {fontFamily: 'WestonFree',  fontSize: 22, color: 'white', padding: 10},
+        footerSpacing: {padding: 25},
+        editModeFooterSpacing: {padding: 50},
 })
 
 export default HomeScreen;

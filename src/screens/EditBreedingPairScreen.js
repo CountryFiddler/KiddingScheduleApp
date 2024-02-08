@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
                             </TouchableOpacity>
  */
 const styles = StyleSheet.create({
-    mainContainer: {flexDirection: "column", justifyContent: 'space-around', alignItems: 'center'},
+    mainContainer: {flex: 1, flexDirection: "column", alignItems: 'center', backgroundColor: 'white'},
     contentContainer: {flexDirection: "column", justifyContent: 'space-around', width: '95%', marginLeft: '2%', margin: '2%'},
     singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', paddingVertical: 5},
     singleTextItemContainerNoPadding: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},

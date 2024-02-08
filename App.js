@@ -23,6 +23,8 @@ const customFonts = {
     WestonFree: require("./assets/fonts/WestonFree-Regular.ttf"),
 };
 
+const brandName = 'Bluegrass Acres Farm'
+
 const fontConfig = {
     fontFamily: 'WestonFree',
 }
@@ -42,18 +44,36 @@ function StackNavigator() {
       <PaperProvider theme={theme}>
           <NavigationContainer>
               <Stack.Navigator
-                  initialRouteName="Home">
+                  initialRouteName="Home"
+              screenOptions={{
+                  headerStyle: {
+                      backgroundColor: '#12284B'
+                  },
+                  headerTitleStyle: {
+                      fontFamily: 'WestonFree',
+                      fontSize: 17,
+                  },
+                  headerTintColor: 'white', // Example tint color for back button and title
+                  headerBackTitleStyle: {
+                      fontFamily: 'WestonFree',
+                      fontSize: 17,
+
+                  }
+              }}>
                   <Stack.Screen
                       name={"HomeScreen"}
                       component={HomeScreen}
+                      options={{ headerTitle: brandName, headerBackTitleVisible: false }}
                   />
                   <Stack.Screen
                       name={"AddBreedingPairScreen"}
                       component={AddBreedingPairScreen}
+                      options={{ headerTitle: brandName, headerBackTitleVisible: false }}
                   />
                   <Stack.Screen
                       name={"EditBreedingPairScreen"}
                       component={EditBreedingPairScreen}
+                      options={{ headerTitle: brandName, headerBackTitleVisible: false }}
                   />
               </Stack.Navigator>
           </NavigationContainer>

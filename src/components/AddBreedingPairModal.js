@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text, Modal, Button, StyleSheet, TextInput } from 'react-native';
-//import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const AddBreedingPairModal = ({ visible, closeModal, addedBreedingPair }) => {
@@ -18,20 +17,13 @@ export const AddBreedingPairModal = ({ visible, closeModal, addedBreedingPair })
     }
     async function storeBreedingPair (key, newData) {
         try {
-            // Step 1: Retrieve existing array from AsyncStorage
             const existingData = await AsyncStorage.getItem(key);
-          //  console.log(!Array.isArray(existingData));
-           // console.log(existingData);
             if (existingData === null) {
                 const breedingPairs = [newData]
-                //console.log(breedingPairs);
-                // Step 3: Save the updated array back to AsyncStorage
                 await AsyncStorage.setItem(key, JSON.stringify(breedingPairs));
             } else {
                 const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
-                // Step 2: Concatenate the new data to the existing array
                 const updatedData = [...parsedExistingBreedingPairs, newData];
-              //  console.log(updatedData);
                 await AsyncStorage.setItem(key, JSON.stringify(updatedData));
             }
 

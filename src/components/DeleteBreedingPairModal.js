@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Modal, Button, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
-//import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const DeleteBreedingPairModal = ({ visible, closeModal, deleteBreedingPair }) => {
 
@@ -51,7 +49,6 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
-     //   alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {

@@ -1,30 +1,9 @@
-import {Component, useEffect, useState} from "react";
 import {Button, StyleSheet, Text, View} from "react-native";
-import {AddBreedingPairModal} from "./AddBreedingPairModal";
-import {EditBreedingPairModal} from "./EditBreedingPairModal";
 import EditBreedingPairScreen from "../screens/EditBreedingPairScreen";
-import {useFonts} from "expo-font";
-import * as Font from 'expo-font'
-import * as SplashScreen from "expo-splash-screen";
-import { AppLoading } from 'expo';
 import {TouchableOpacity} from "react-native";
 
 
 const KiddingEntry = props => {
-
-    const [editMode, setEditMode] = useState(props.editMode)
-
-    const breedingDate = new Date(props.breedingDate);
-
-    const kiddingDate = new Date(props.kiddingDate);
-
-    //console.log(editMode);
-    /*const fetchFonts = async () =>
-        await Font.loadAsync({
-            'Weston Free': require('../assets/fonts/Weston Free.otf'),
-        });
-    //console.log(props.doe);*/
-
 
     if (props.editMode) {
         return (

@@ -1,16 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {View, SafeAreaView, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
-//import {storeBreedingPair} from "../functions/AsyncStorageFunctions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TouchableOpacity} from "react-native";
 import { RadioButton } from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
-//import {RadioGroup} from 'react-native-ui-lib';
-//import {RadioButton} from "react-native-ui-lib";
-import KiddingEntry from "../components/KiddingEntry";
-import {Feather} from "@expo/vector-icons"; //eslint-disable-line
-import { AntDesign } from '@expo/vector-icons';
-
 const AddBreedingPairScreen = props => {
 
     const [doe, setDoe] = useState('');
@@ -22,8 +15,6 @@ const AddBreedingPairScreen = props => {
     const [kiddingDate, setKiddingDate] = useState('');
     const [gestationCalculatorMode, setGestationCalculatorMode] = useState('standard');
     const [breedingDateSelected, setBreedingDateSelected] = useState(false);
-    // Used so that if the user doesn't make changes in the date picker, that the selected date by the
-    // user shows right after the "Bred: " label
     const [isCurDateBreedingDate, setIsCurDateBreedingDate] = useState(true);
 
     const breedingPair = {
@@ -38,7 +29,6 @@ const AddBreedingPairScreen = props => {
     const onChange = (event, selectedDate) => {
         setIsCurDateBreedingDate(false);
         const currentDate = selectedDate;
-        //setShow(false);
         setBreedingDateSelected(true);
         setTempBreedingDate(currentDate);
     };
@@ -55,7 +45,6 @@ const AddBreedingPairScreen = props => {
     const submitBreedingDate = () => {
         if (isCurDateBreedingDate) {
             setBreedingDateSelected(true);
-            //calculateKiddingDate();
         }
         setBreedingDate(tempBreedingDate);
         calculateKiddingDate(tempBreedingDate);
@@ -65,17 +54,11 @@ const AddBreedingPairScreen = props => {
 
     async function storeBreedingPair (key, newData) {
         try {
-            // Step 1: Retrieve existing array from AsyncStorage
             newData.id = newData.doe + newData.buck + newData.breedingDate + newData.kiddingDate;
             let pairExists = false;
-           // console.log(newData.id);
             const existingData = await AsyncStorage.getItem(key);
-            //  console.log(!Array.isArray(existingData));
-            // console.log(existingData);
             if (existingData === null) {
                 const breedingPairs = [newData]
-                //console.log(breedingPairs);
-                // Step 3: Save the updated array back to AsyncStorage
                 await AsyncStorage.setItem(key, JSON.stringify(breedingPairs));
             } else {
                 const parsedExistingBreedingPairs = existingData ? JSON.parse(existingData) : [];
@@ -88,16 +71,12 @@ const AddBreedingPairScreen = props => {
                 }
 
                 if (!pairExists) {
-                    // Step 2: Concatenate the new data to the existing array
                     const updatedData = [...parsedExistingBreedingPairs, newData];
-                    //  console.log(updatedData);
                     await AsyncStorage.setItem(key, JSON.stringify(updatedData));
 
                     console.log('Array concatenated and stored successfully.');
                     setDoe('');
                     setBuck('');
-                    //setBreedingDate('');
-                    //setKiddingDate('');
                     props.navigation.navigate('HomeScreen')
 
                 } else {
@@ -111,17 +90,13 @@ const AddBreedingPairScreen = props => {
                     );
                 }
             }
-            //await AsyncStorage.removeItem(key);
-            //addBreedingPair();
         } catch (error) {
             console.error('Error concatenating array:', error);
         }
     };
 
     const calculateKiddingDate = (breedingDate) => {
-        // Add 10 days to the existing date
         const newDate = new Date(breedingDate);
-        //newDate.setDate(breedingDate.getDate() + 150);
         if ((gestationCalculatorMode) === 'standard') {
             newDate.setDate(breedingDate.getDate() + 150);
             setKiddingDate(newDate.toDateString());

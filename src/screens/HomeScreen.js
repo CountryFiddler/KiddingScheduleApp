@@ -1,32 +1,20 @@
 import {Component, useCallback, useEffect, useState} from "react";
-import { useFonts } from 'expo-font';
 import {Button, StyleSheet, Text, View, FlatList, TouchableOpacityComponent} from "react-native";
 import KiddingEntry from "../components/KiddingEntry";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity} from "react-native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import * as Font from 'expo-font'
-import * as SplashScreen from "expo-splash-screen";
-import {Feather, FontAwesome} from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
-import {Touchable} from "react-native-web";
 
 
 const HomeScreen = ({navigation}) => {
 
     const [breedingPairs, setBreedingPairs] = useState([]);
 
-   // const [breedingPairsExist, setBreedingPairsExist] = useState(true);
-
     const [isLoading, setIsLoading] = useState(true);
 
     const [editMode, setEditMode] = useState(false);
 
-    const deleteBreedingPairs = async () => {
-        await AsyncStorage.removeItem('breedingPairs');
-    }
     const fetchBreedingPairs = async () => {
         try {
             // Fetch data from AsyncStorage
@@ -37,28 +25,16 @@ const HomeScreen = ({navigation}) => {
                 const data = dataString ? JSON.parse(dataString) : [];
 
                 // Now 'data' is a JavaScript object or array
-               // console.log('Fetched data:', data);
                 return data;
             } else {
                 // Data is not available
                 console.log('No data found');
-                //setBreedingPairsExist(false);
             }
         } catch (error) {
             // Handle errors
             console.error('Error fetching data:', error);
         }
     };
-
-  /* const fetchFonts = async() => {
-        await Font.loadAsync({
-            'WestonFree': require('../assets/fonts/WestonFree-Regular.ttf'),
-        })
-    }*/
-
-
-
-   // const [fontsLoaded, setFontsLoaded] = useState(false);
 
     const isFocused = useIsFocused();
 
@@ -74,17 +50,13 @@ const HomeScreen = ({navigation}) => {
             fetchBreedingPairs().then((token) => {
                 setBreedingPairs(token);
                 setIsLoading(false);
-                //console.log(breedingPairs.length)
                 console.log(breedingPairs)
-               // console.log('Rerender');
             });
-            //console.log(breedingPairs)
         }
     }, [isFocused]);
 
 
     useEffect(() => {
-        //console.log('Bob')
     }, [editMode]);
 
 
@@ -150,65 +122,6 @@ const HomeScreen = ({navigation}) => {
             </View>
         );
 };
-
-/*
-<KiddingEntry doe={"Toffee"} buck={"Shasta"} kiddingDate={'3/11/24'}/>
-                    <KiddingEntry doe={"Caramel Mist"} buck={"Chino"} kiddingDate={'3/11/24'}
-
-                    renderItem={({pair}) => <KiddingEntry doe={pair.doe} buck={pair.buck} kiddingDate={pair.kiddingDate}/>}/>
-
-                                        data={[{doe: 'Toffee', buck: 'Shasta', kiddingDate: '3/23/23', id: '1'},
-                        {doe: 'Mist', buck: 'Chino', kiddingDate: '3/11/23', id: '2'}]}
-
-                        <AddBreedingPairModal visible={addPairModalVisible} closeModal={closeAddPairModal} addedBreedingPair={addPair}/>
-
-                            /*useEffect(() => {
-        fetchBreedingPairs().then((token) => {
-            setBreedingPairs(token);
-            setIsLoading(false);
-            console.log('Rerender')
-        });
-    }, [addBreedingPair])
-
-    useEffect(() => {
-        fetchBreedingPairs().then((token) => {
-            setBreedingPairs(token);
-            setIsLoading(false);
-            console.log('Rerender')
-        });
-    }, [addBreedingPair])
-        const [addBreedingPair, setAddBreedingPair] = useState(false);
-    const [deleteBreedingPair, setDeleteBreedingPair] = useState(false);
-
-        const openAddPairModal = () => {
-        setAddPairModalVisible(true);
-    };
-
-    const closeAddPairModal = () => {
-        setAddPairModalVisible(false);
-    };
-
-    const openEditPairModal = () => {
-        setEditPairModalVisible(true);
-    };
-
-    const closeEditPairModal = () => {
-        setEditPairModalVisible(false);
-    };
-
-    const addPair = () => {
-        setAddBreedingPair(true);
-    }
-
-    const deletePair = () => {
-        setDeleteBreedingPair(true);
-    }
-
-    const [addPairModalVisible, setAddPairModalVisible] = useState(false);
-    const [editPairModalVisible, setEditPairModalVisible] = useState(false);
- */
-
-
 
 
 const styles = StyleSheet.create({

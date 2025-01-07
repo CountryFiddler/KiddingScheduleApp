@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, SafeAreaView, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
+import {View, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TouchableOpacity} from "react-native";
 import { RadioButton } from 'react-native-paper';

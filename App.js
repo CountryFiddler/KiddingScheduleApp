@@ -10,6 +10,7 @@ import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen'
 import {useCallback, useEffect} from 'react';
+import {Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome } from '@expo/vector-icons';
 import {TextInput} from "react-native-web";
@@ -46,13 +47,20 @@ function StackNavigator() {
               <Stack.Navigator
                   initialRouteName="Home"
               screenOptions={{
+                  headerTitle: () => (
+                      <View style={styles.headerStyle}>
+                          <Image
+                              source={require('./assets/Farm Logo.png')} // Replace with your image path
+                              style={{ width: 50, height: 55, resizeMode: 'contain' }}
+                          />
+                          <Text style={styles.headerTitleStyle}>{brandName}</Text>
+                      </View>
+                  ),
                   headerStyle: {
-                      backgroundColor: '#12284B'
+                      backgroundColor: '#12284B',
+                      height: 130,
                   },
-                  headerTitleStyle: {
-                      fontFamily: 'WestonFree',
-                      fontSize: 17,
-                  },
+
                   headerTintColor: 'white', // Example tint color for back button and title
                   headerBackTitleStyle: {
                       fontFamily: 'WestonFree',
@@ -63,17 +71,17 @@ function StackNavigator() {
                   <Stack.Screen
                       name={"HomeScreen"}
                       component={HomeScreen}
-                      options={{ headerTitle: brandName, headerBackTitleVisible: false }}
+                      options={{ headerBackTitleVisible: false }}
                   />
                   <Stack.Screen
                       name={"AddBreedingPairScreen"}
                       component={AddBreedingPairScreen}
-                      options={{ headerTitle: brandName, headerBackTitleVisible: false }}
+                      options={{ headerBackTitleVisible: false }}
                   />
                   <Stack.Screen
                       name={"EditBreedingPairScreen"}
                       component={EditBreedingPairScreen}
-                      options={{ headerTitle: brandName, headerBackTitleVisible: false }}
+                      options={{ headerBackTitleVisible: false }}
                   />
               </Stack.Navigator>
           </NavigationContainer>
@@ -118,5 +126,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-    font: {fontFamily: "WestonFree"}
+    font: {fontFamily: "WestonFree"},
+    headerTitleStyle: {
+        fontFamily: 'WestonFree',
+        fontSize: 17,
+        color:'black'
+    },
+    headerStyle: {
+      flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderWidth: 3,
+    },
 });

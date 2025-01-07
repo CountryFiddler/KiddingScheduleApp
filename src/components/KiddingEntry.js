@@ -69,12 +69,15 @@ const styles = StyleSheet.create({
     multipleItemsContainer: {flexDirection: "row", justifyContent: 'space-around', margin: '2%'},
     importantDatesContainer: {},
     singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
-    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#12284B'},
+    kiddingEntryText: {fontFamily: 'Georgia',  fontSize: 22, marginTop: '2%', color: '#000000'},
     kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
-    dueDateText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#B6922E'},
+    dueDateText: {fontFamily: 'Georgia',  fontSize: 22, marginTop: '2%', color: '#000000'},
     dueDateLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#B6922E'},
     decorativeLine: {borderWidth: '2px', borderColor: '#12284B', marginTop: '2%', borderRadius: '10%', width: '95%'
     , backgroundColor: '#12284B'},
 })
 
+/*
+* Other Hex Codes
+* Navy Blue = #12284B*/
 export default KiddingEntry;

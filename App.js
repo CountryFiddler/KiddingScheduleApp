@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from "@react-navigation/native";
+import EmailCollectionScreen from './src/screens/EmailCollectionScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import AddBreedingPairScreen from "./src/screens/AddBreedingPairScreen";
 import EditBreedingPairScreen from "./src/screens/EditBreedingPairScreen";
@@ -9,12 +10,13 @@ import * as Font from "expo-font";
 // import useFonts hook
 import { useFonts } from "expo-font";
 import * as SplashScreen from 'expo-splash-screen'
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {Image} from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome } from '@expo/vector-icons';
 import {TextInput} from "react-native-web";
 import { configureFonts, Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -40,12 +42,13 @@ const theme = {
 };
 
 
-function StackNavigator() {
+function StackNavigator(routeName) {
+    console.log(routeName.routeName);
   return (
       <PaperProvider theme={theme}>
           <NavigationContainer>
               <Stack.Navigator
-                  initialRouteName="Home"
+                  initialRouteName={'EmailCollectionScreen'}
               screenOptions={{
                   headerTitle: () => (
                       <View style={styles.headerStyle}>
@@ -65,12 +68,16 @@ function StackNavigator() {
                   headerBackTitleStyle: {
                       fontFamily: 'WestonFree',
                       fontSize: 17,
-
                   }
               }}>
                   <Stack.Screen
                       name={"HomeScreen"}
                       component={HomeScreen}
+                      options={{ headerBackTitleVisible: false, headerLeft: null }}
+                  />
+                  <Stack.Screen
+                      name={"EmailCollectionScreen"}
+                      component={EmailCollectionScreen}
                       options={{ headerBackTitleVisible: false }}
                   />
                   <Stack.Screen
@@ -98,11 +105,39 @@ export default function App() {
         "WestonFree": require('./assets/fonts/WestonFree-Regular.ttf'),
     })
 
+    // Variable to verify if the user's email address has been collected.
+    const [emailCollected, setEmailCollected] = useState(true);
+
     const onLayoutRootView = useCallback(async () => {
         if (fontsLoaded) {
             await SplashScreen.hideAsync();
         }
     }, [fontsLoaded]);
+
+
+    // Use this to setup the email screen routing
+   const [initialRoute, setInitialRoute] = useState('Home');
+
+    useEffect(() => {
+        // Simulate fetching data (e.g., from AsyncStorage or an API)
+        const fetchInitialRoute = async () => {
+            try {
+                // Fetch data from AsyncStorage
+                const emailCollected = await AsyncStorage.getItem('emailCollected');
+                if (emailCollected === null) {
+                    setInitialRoute('EmailCollectionScreen');
+                   // console.log(initialRoute);
+                } else {
+                    setInitialRoute('Home');
+                }
+            } catch (error) {
+                // Handle errors
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchInitialRoute();
+    }, []);
 
     /*useEffect(() => {
         async function prepare() {
@@ -112,11 +147,14 @@ export default function App() {
     }, [])*/
 
     if (!fontsLoaded) {
-        return <View><Text> Fonts Loading...</Text></View>;;
+        return <View><Text> Fonts Loading...</Text></View>;
+    }
+
+    if (!emailCollected) {
+        return <EmailCollectionScreen/>
     }
         return (
-                <StackNavigator/>
-
+                <StackNavigator routeName={initialRoute}/>
         );
 }
 const styles = StyleSheet.create({

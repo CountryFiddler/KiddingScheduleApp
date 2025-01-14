@@ -1,33 +1,87 @@
 import HomeScreen from "./HomeScreen";
-import {FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {AntDesign} from "@expo/vector-icons";
 import React, {useState} from "react";
+import Parse from 'parse/react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+
+
+// Initialize Parse only once
+Parse.setAsyncStorage(AsyncStorage);
+Parse.initialize('IQKXcMx3dHAEhNwzvjVCQdJQF4Pi9pIJZ1cWCLtD', 'hyrqRPfqz1eXwgoU6DyoZ6jwtAaF7TgeuuCGQaya');
+Parse.serverURL = 'https://parseapi.back4app.com/';
 
 const EmailCollectionScreen = props => {
-    async function storeEmailAddress(key, emailAddress) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const [emailAddress, setEmailAddress] = useState('')
+    const doUserRegistration = async function () {
+        /*let currentUser = Parse.User.current();
+        if (currentUser) {
+            // do stuff with the user
+            Parse.User.logOut();
+        }*/
+        AsyncStorage.clear();
+        // Note that these values come from state variables that we've declared before
+        	  const usernameValue = emailAddress;
+        	  const passwordValue = emailAddress;
+        	  // Since the signUp method returns a Promise, we need to call it using await
+        	  return await Parse.User.signUp(usernameValue, passwordValue)
+        	    .then((createdUser) => {
+            	      // Parse.User.signUp returns the already created ParseUser object if successful
+            	      Alert.alert(
+                	        'Success!',
+                	        `User ${createdUser.getUsername()} was successfully created!`,
+                	      );
+            	      return true;
+            	    })
+        	    .catch((error) => {
+            	      // signUp can fail if any parameter is blank or failed an uniqueness check on the server
+            	      Alert.alert('Error!', error.message);
+                      console.log(error);
+            	      return false;
+            	    });
+        	};
+
+    async function storeEmailAddress(key) {
         try {
-            await AsyncStorage.setItem(key, JSON.stringify(true));
-            props.navigation.navigate('HomeScreen')
+            if (isValidEmail) {
+                console.log(emailAddress);
+                await AsyncStorage.setItem(key, JSON.stringify(true));
+                // const user = new Parse.User();
+                await doUserRegistration();
+            }
         } catch (error) {
             console.error('Error Collecting Email Address', error);
         }
     }
 
-    const [emailAddress, setEmailAddress] = useState('')
+    const [isValidEmail, setIsValidEmail] = useState(true);
+
+    const validateEmail = (input) => {
+        setIsValidEmail(emailRegex.test(input)); // Validate email
+        setEmailAddress(input); // Update the input value
+    };
+
     return (
         <View style={styles.mainContainer}>
             <Text style={styles.messageText}>Enter Your Email Address to Get Started</Text>
             <TextInput
-                style={styles.emailAddressContainer}
+                style={[styles.emailAddressContainer, {borderColor: isValidEmail ? 'green' : 'red' }]}
                 autoCapitalize={'none'}
                 placeholderTextColor='grey'
                 placeholder={'Email Address'}
                 value={emailAddress}
-                onChangeText={text => setEmailAddress(text)}/>
-            <TouchableOpacity onPress={() => {storeEmailAddress('emailCollected', emailAddress)}}>
+                keyboardType={'email-address'}
+                onChangeText={text => validateEmail(text)}/>
+            {!isValidEmail && emailAddress.length > 0 && (
+                <Text style={styles.errorText}>Invalid email address</Text>
+            )}
+            <TouchableOpacity onPress={() => {storeEmailAddress('emailCollected')}}>
                 <View style={styles.submitButtonContainer}>
-                    <Text style={styles.submitButtonText}>Submit</Text>
+                    <Text
+                        style={styles.submitButtonText}>Submit</Text>
                 </View>
             </TouchableOpacity>
             <View style={styles.footerSpacing}/>

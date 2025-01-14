@@ -6,6 +6,7 @@ import EmailCollectionScreen from './src/screens/EmailCollectionScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import AddBreedingPairScreen from "./src/screens/AddBreedingPairScreen";
 import EditBreedingPairScreen from "./src/screens/EditBreedingPairScreen";
+
 import * as Font from "expo-font";
 // import useFonts hook
 import { useFonts } from "expo-font";
@@ -16,7 +17,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FontAwesome } from '@expo/vector-icons';
 import {TextInput} from "react-native-web";
 import { configureFonts, Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Parse from 'parse/react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Initialize Parse only once
+Parse.setAsyncStorage(AsyncStorage);
+Parse.initialize('IQKXcMx3dHAEhNwzvjVCQdJQF4Pi9pIJZ1cWCLtD', 'hyrqRPfqz1eXwgoU6DyoZ6jwtAaF7TgeuuCGQaya');
+Parse.serverURL = 'https://parseapi.back4app.com/';
 
 
 
@@ -60,7 +67,8 @@ function StackNavigator(routeName) {
                       </View>
                   ),
                   headerStyle: {
-                      backgroundColor: '#12284B',
+                      //backgroundColor: '#12284B',
+                      backgroundColor: '#FFFFFF',
                       height: 130,
                   },
 
@@ -168,13 +176,13 @@ const styles = StyleSheet.create({
     headerTitleStyle: {
         fontFamily: 'WestonFree',
         fontSize: 17,
-        color:'black'
+        color:'#12284B',
     },
     headerStyle: {
       flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
-        borderWidth: 3,
+        //backgroundColor: '#fff',
+        //borderWidth: 3,
     },
 });

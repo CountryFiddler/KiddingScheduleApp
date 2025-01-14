@@ -23,3 +23,15 @@ export async function storeBreedingPair (key, newData) {
         console.error('Error concatenating array:', error);
     }
 };
+
+/*async function addEmailAddress(userEmailAddress) {
+    const emailAddress = new Parse.Object("emailAddresses");
+    emailAddress.set("emailAddresses", userEmailAddress);
+
+    try {
+        const result = await emailAddress.save();
+        console.log('New object created with objectId: ' + result.id);
+    } catch (error) {
+        console.error('Error: ' + error.message);
+    }
+}*/

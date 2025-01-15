@@ -55,7 +55,7 @@ function StackNavigator(routeName) {
       <PaperProvider theme={theme}>
           <NavigationContainer>
               <Stack.Navigator
-                  initialRouteName={'EmailCollectionScreen'}
+                  initialRouteName={'Home'}
               screenOptions={{
                   headerTitle: () => (
                       <View style={styles.headerStyle}>
@@ -133,7 +133,7 @@ export default function App() {
                 // Fetch data from AsyncStorage
                 const emailCollected = await AsyncStorage.getItem('emailCollected');
                 if (emailCollected === null) {
-                    setInitialRoute('EmailCollectionScreen');
+                    setInitialRoute('Home');
                    // console.log(initialRoute);
                 } else {
                     setInitialRoute('Home');

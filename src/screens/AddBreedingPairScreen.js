@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Modal, Button, StyleSheet, TextInput, Alert} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {View, Text, Modal, Button, StyleSheet, TextInput, Alert, ScrollView} from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TouchableOpacity} from "react-native";
 import { RadioButton } from 'react-native-paper';
@@ -115,8 +115,17 @@ const AddBreedingPairScreen = props => {
         calculateKiddingDate(breedingDate)
     }, [gestationCalculatorMode])
 
+    const handleChangeText = useCallback((newText) => {
+        setBuck(newText);
+    }, []);
+
+   /* const handleChangeText = debounce((newText) => {
+        setBuck(newText);
+    }, 300);*/
+
+    const buckName = useRef(null);
     return (
-            <View style={styles.mainContainer}>
+            <ScrollView style={styles.mainContainer} automaticallyAdjustContentInsets={true}>
                 <View style={styles.contentContainer}>
                     <View style={styles.singleTextItemContainer}>
                         <Text style={styles.kiddingEntryLabel}>Doe: </Text>
@@ -136,7 +145,7 @@ const AddBreedingPairScreen = props => {
                             placeholder={'Buck Name'}
                             value={buck}
                             onChangeText={text => setBuck(text)}
-                        />
+                            />
                     </View>
                     <View style={styles.singleTextItemContainer}>
                         <TouchableOpacity style={styles.singleTextItemContainerNoPadding} onPress={showDatepicker}>
@@ -233,8 +242,9 @@ const AddBreedingPairScreen = props => {
                     ) : null}
 
                 </View>
+                <View style={styles.footer}/>
 
-            </View>
+            </ScrollView>
     );
 };
 
@@ -242,12 +252,12 @@ const AddBreedingPairScreen = props => {
 
 
 const styles = StyleSheet.create({
-    mainContainer: {flex: 1, flexDirection: "column", alignItems: 'center', backgroundColor: 'white'},
+    mainContainer: {flex: 1, flexDirection: "column",  backgroundColor: 'white'},
     contentContainer: {flexDirection: "column", justifyContent: 'space-around', width: '95%', marginLeft: '2%', margin: '2%'},
-    singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', paddingVertical: 5},
+    singleTextItemContainer: {flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start', paddingVertical: 10, textAlign: 'left',width: '100%'},
     singleTextItemContainerNoPadding: {flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center'},
-    kiddingEntryText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: '#12284B'},
-    selectBreedingDateText: {fontFamily: 'WestonFree',  fontSize: 20, marginTop: '2%', color: 'grey'},
+    kiddingEntryText: {fontFamily: 'georgia',  fontSize: 20, marginTop: '2%', color: '#12284B', width: '75%'},
+    selectBreedingDateText: {fontFamily: 'georgia',  fontSize: 20, marginTop: '2%', color: 'grey'},
     kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
     buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '5%'},
     radioButtonContainer: {flexDirection: 'column', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'},
@@ -266,7 +276,7 @@ const styles = StyleSheet.create({
         , backgroundColor: '#000034'},
     decorativeLine3: {borderWidth: '2px', borderColor: '#B6922E', borderRadius: '10%', width: '100%'
         , backgroundColor: '#000034'},
-
+    footer: {padding: 200},
 });
 
 export default AddBreedingPairScreen;

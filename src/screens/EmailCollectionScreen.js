@@ -22,7 +22,7 @@ const EmailCollectionScreen = props => {
             // do stuff with the user
             Parse.User.logOut();
         }*/
-        AsyncStorage.clear();
+        //AsyncStorage.clear();
         // Note that these values come from state variables that we've declared before
         	  const usernameValue = emailAddress;
         	  const passwordValue = emailAddress;
@@ -51,6 +51,7 @@ const EmailCollectionScreen = props => {
                 await AsyncStorage.setItem(key, JSON.stringify(true));
                 // const user = new Parse.User();
                 await doUserRegistration();
+                props.navigation.navigate('HomeScreen');
             }
         } catch (error) {
             console.error('Error Collecting Email Address', error);

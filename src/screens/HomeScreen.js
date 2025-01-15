@@ -11,6 +11,8 @@ const HomeScreen = ({navigation}) => {
 
     const [breedingPairs, setBreedingPairs] = useState([]);
 
+    //const [breedingPairsExist, setBreedingPairsExist] = useState(true);
+
     const [isLoading, setIsLoading] = useState(true);
 
     const [editMode, setEditMode] = useState(false);
@@ -19,7 +21,7 @@ const HomeScreen = ({navigation}) => {
         try {
             // Fetch data from AsyncStorage
             const dataString = await AsyncStorage.getItem('breedingPairs');
-            console.log(dataString)
+            //console.log(dataString)
             if (dataString !== null) {
                 // Parse the data if it's not null
                 const data = dataString ? JSON.parse(dataString) : [];
@@ -59,6 +61,8 @@ const HomeScreen = ({navigation}) => {
     useEffect(() => {
     }, [editMode]);
 
+    useEffect(() => {},
+        [breedingPairs]);
 
     if (isLoading) {
         return <View><Text>Loading...</Text></View>;
@@ -85,7 +89,7 @@ const HomeScreen = ({navigation}) => {
                         </View>
                     )}
                 </View>
-                {(breedingPairs.length === 0 && !editMode) ? (
+                {(breedingPairs === undefined && !editMode) ? (
                     <View style={styles.welcomeMessageContainer}>
                         <Text style={styles.welcomeMessageText}>Click the + button in to begin adding breeding pairs to your kidding schedule. Here's to a
                         great kidding season!</Text>

@@ -17,6 +17,18 @@ const HomeScreen = ({navigation}) => {
 
     const [editMode, setEditMode] = useState(false);
 
+    function kiddingDateToString(data) {
+        const options = { year: 'numeric', month: 'short', day: 'numeric', weekday: 'short' };
+        for (var i = 0; i < data.length; i++) {
+            //const formattedDate = date[i].kiddingDate.toLocaleDateString('en-US', options);
+            console.log(data[i].kiddingDate);
+            data[i].kiddingDate = new Date(data[i].kiddingDate);
+            data[i].kiddingDate = data [i].kiddingDate.toLocaleDateString('en-US', options);
+            console.log(data[i].kiddingDate);
+        }
+        return data;
+    }
+
     const fetchBreedingPairs = async () => {
         try {
             // Fetch data from AsyncStorage
@@ -27,7 +39,10 @@ const HomeScreen = ({navigation}) => {
                 const data = dataString ? JSON.parse(dataString) : [];
 
                 // Now 'data' is a JavaScript object or array
-                return data;
+                var sortedData = [...data].sort((a, b) => new Date(a.kiddingDate) - new Date(b.kiddingDate));
+                var finalData = kiddingDateToString(sortedData);
+                return finalData;
+                //return sortedData;
             } else {
                 // Data is not available
                 console.log('No data found');
@@ -42,8 +57,11 @@ const HomeScreen = ({navigation}) => {
 
 
     const renderKiddingPairs = ( {item} ) => (
+        <View>
         <KiddingEntry doe={item.doe} buck={item.buck} kiddingDate={item.kiddingDate} breedingDate={item.breedingDate}
                       id={item.id} navigation={navigation} editMode={editMode}/>
+        <View style={styles.kiddingEntryDivider}/>
+    </View>
     );
 
 
@@ -135,13 +153,14 @@ const styles = StyleSheet.create({
         headerContainer: { flexDirection: "row", alignItems: 'center', justifyContent: 'space-between', width: '95%'
         , marginTop: '2%', height: '5%'},
         headers: {fontWeight: "bold", fontSize: 24, fontFamily: 'WestonFree', color: '#12284B'},
-        listView: {marginTop: '2%', width: '100%', flex: 1},
+        listView: {marginTop: '2%', width: '100%', flex: 1,},
         editListView: {marginTop: '2%', width: '100%'},
         welcomeMessageContainer: {flex: 1, width: '95%',  alignItems: 'center', marginTop: '15%'},
         welcomeMessageText: {fontWeight: "bold", fontSize: 18, fontFamily: 'WestonFree', color: '#12284B', lineHeight: 35, textAlign: 'center'},
         editModeContainer: {flex: 1, width: '100%',  alignItems: 'center', marginTop: '5%', marginBottom: '10%'},
         doneButtonContainer: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center'},
         doneButtonText: {fontFamily: 'WestonFree',  fontSize: 22, color: 'white', padding: 10},
+        kiddingEntryDivider: {padding: 10},
         footerSpacing: {padding: 25},
         editModeFooterSpacing: {padding: 50},
 })

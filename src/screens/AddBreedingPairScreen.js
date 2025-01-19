@@ -12,7 +12,7 @@ const AddBreedingPairScreen = props => {
     const [tempBreedingDate, setTempBreedingDate] = useState(new Date());
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
-    const [kiddingDate, setKiddingDate] = useState('');
+    const [kiddingDate, setKiddingDate] = useState(new Date());
     const [gestationCalculatorMode, setGestationCalculatorMode] = useState('standard');
     const [breedingDateSelected, setBreedingDateSelected] = useState(false);
     const [isCurDateBreedingDate, setIsCurDateBreedingDate] = useState(true);
@@ -99,11 +99,11 @@ const AddBreedingPairScreen = props => {
         const newDate = new Date(breedingDate);
         if ((gestationCalculatorMode) === 'standard') {
             newDate.setDate(breedingDate.getDate() + 150);
-            setKiddingDate(newDate.toDateString());
+            setKiddingDate(newDate);
         }
         if (gestationCalculatorMode === 'mini') {
             newDate.setDate(breedingDate.getDate() + 145);
-            setKiddingDate(newDate.toDateString());
+            setKiddingDate(newDate);
         }
         if (gestationCalculatorMode === 'custom') {
             setKiddingDate('');
@@ -119,11 +119,7 @@ const AddBreedingPairScreen = props => {
         setBuck(newText);
     }, []);
 
-   /* const handleChangeText = debounce((newText) => {
-        setBuck(newText);
-    }, 300);*/
 
-    const buckName = useRef(null);
     return (
             <ScrollView style={styles.mainContainer} automaticallyAdjustContentInsets={true}>
                 <View style={styles.contentContainer}>
@@ -197,9 +193,15 @@ const AddBreedingPairScreen = props => {
                                         value={gestationCalculatorMode}
                                     >
                                         <View style={styles.radioButtonContainer}>
-                                            <RadioButton.Item color='#B6922E' label="Standard Breed" value="standard"/>
-                                            <RadioButton.Item color='#B6922E' label="Mini Breed" value="mini" />
-                                            <RadioButton.Item color='#B6922E' label="Custom Date" value="custom" />
+                                            <RadioButton.Item style={gestationCalculatorMode === 'standard' ? styles.checkedRadioButton : styles.uncheckedRadioButton}
+                                                              labelStyle={gestationCalculatorMode === 'standard' ? styles.checkedRadioButtonLabel : styles.uncheckedRadioButtonLabel}
+                                                              color='#B6922E' label="Standard Breed" value="standard"/>
+                                            <RadioButton.Item style={gestationCalculatorMode === 'mini' ? styles.checkedRadioButton : styles.uncheckedRadioButton}
+                                                              labelStyle={gestationCalculatorMode === 'mini' ? styles.checkedRadioButtonLabel : styles.uncheckedRadioButtonLabel}
+                                                              color='#B6922E' label="Mini Breed" value="mini"/>
+                                            <RadioButton.Item style={gestationCalculatorMode === 'custom' ? styles.checkedRadioButton : styles.uncheckedRadioButton}
+                                                              labelStyle={gestationCalculatorMode === 'custom' ? styles.checkedRadioButtonLabel : styles.uncheckedRadioButtonLabel}
+                                                              color='#B6922E' label="Custom Date" value="custom" />
                                         </View>
                                     </RadioButton.Group>
                                 </View>
@@ -211,14 +213,14 @@ const AddBreedingPairScreen = props => {
                                             style={styles.kiddingEntryText}
                                             placeholderTextColor='grey'
                                             placeholder={'Kidding Date'}
-                                            value={kiddingDate}
+                                            value={kiddingDate.toDateString()}
                                             onChangeText={text => setKiddingDate(text)}
                                         />
                                     </View>
                                 ) : (
                                     <View style={styles.singleTextItemContainer}>
                                         <Text style={styles.kiddingEntryLabel}>Due: </Text>
-                                        <Text style={styles.kiddingEntryText}>{kiddingDate}</Text>
+                                        <Text style={styles.kiddingEntryText}>{kiddingDate.toDateString()}</Text>
                                     </View>
                                 )}
 
@@ -260,10 +262,15 @@ const styles = StyleSheet.create({
     selectBreedingDateText: {fontFamily: 'georgia',  fontSize: 20, marginTop: '2%', color: 'grey'},
     kiddingEntryLabel: { fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: '#12284B'},
     buttonContainer: {flexDirection: 'row', justifyContent: 'space-evenly',  width: '100%', marginTop: '5%'},
-    radioButtonContainer: {flexDirection: 'column', justifyContent: 'space-evenly',  width: '100%', marginTop: '2%'},
-    radioButtonColor: {color: '#B6922E'},
+    radioButtonContainer: {flexDirection: 'column',  width: '100%', },
+    checkedRadioButton: {flexDirection: 'row', alignItems: 'flex-start', marginTop: '5%', backgroundColor: '#12284b', borderRadius: '5%', borderWidth: '3px',
+        borderColor: '#12284B'},
+    uncheckedRadioButton: {flexDirection: 'row', alignItems: 'flex-start', marginTop: '5%',  borderRadius: '5%', borderWidth: '3px',
+        borderColor: '#12284B'},
+    checkedRadioButtonLabel: {fontSize: 20, color: 'white', padding: 5},
+    uncheckedRadioButtonLabel: {fontSize: 20, color: 'black', padding: 5},
     datePickerContainer: {flexDirection: 'column', alignItems: 'center'},
-    centerColumnView: {flexDirection: 'column', alignItems: 'center', marginTop: '5%'},
+    centerColumnView: {flexDirection: 'column', alignItems: 'flex-start', marginTop: '5%'},
     submitButtonContainer: {flexDirection: 'column', alignItems: 'center', marginTop: '5%', backgroundColor: '#12284b', borderRadius: '10%', borderWidth: '3px',
     borderColor: '#12284B'},
     submitButtonText: {fontFamily: 'WestonFree',  fontSize: 22, marginTop: '2%', color: 'white', padding: 10},

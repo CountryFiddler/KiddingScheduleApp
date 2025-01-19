@@ -60,7 +60,27 @@ const KiddingEntry = props => {
 };
 
 const styles = StyleSheet.create({
-    mainContainer: {flexDirection: "column", justifyContent: 'space-around', alignItems: 'center'},
+    mainContainer: {
+        flexDirection: "column",
+        justifyContent: 'space-around',
+        alignItems: 'center',
+
+        backgroundColor: '#FAFAFA',
+        borderRadius: 10,
+        //paddingLeft: 5,
+        paddingRight: 15,
+        paddingTop: 15,
+        paddingBottom: 15,
+
+        // iOS Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+
+        // Android Shadow
+        elevation: 5,
+    },
     contentContainer: {flexDirection: "column", width: '95%', marginLeft: '2%', margin: '2%'},
     headerContainer: { flexDirection: "row", justifyContent: 'center'},
     headers: {fontWeight: "bold"},

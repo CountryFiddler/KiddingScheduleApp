@@ -36,7 +36,7 @@ const customFonts = {
 const brandName = 'Bluegrass Acres Farm'
 
 const fontConfig = {
-    fontFamily: 'WestonFree',
+    fontFamily: 'Georgia',
 }
 const theme = {
     ...DefaultTheme,
